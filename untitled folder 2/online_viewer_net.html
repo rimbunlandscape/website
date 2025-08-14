@@ -1,0 +1,3260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indonesian Native Species - Complete Database</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+        .species-card {
+            transition: all 0.3s ease;
+        }
+        .species-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        .image-upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .image-upload-area:hover {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        .image-upload-area.dragover {
+            border-color: #10b981;
+            background-color: #ecfdf5;
+        }
+        .nav-button.active {
+            background-color: #059669;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-green-50 to-blue-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-lg border-b-4 border-green-500">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="cursor-pointer hover:bg-green-50 p-2 rounded-lg transition-colors">
+                    <h1 class="text-3xl font-bold text-green-800">🌿 Rimbun Landscape</h1>
+                    <p class="text-green-600 mt-1">Sustainable Landscaping & Biodiversity Conservation</p>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="showSection('home')" class="nav-button bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg font-medium transition-colors active">
+                        🏠 Home
+                    </button>
+                    <button onclick="showSection('services')" class="nav-button bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg font-medium transition-colors">
+                        🌳 Services
+                    </button>
+                    <button onclick="showSection('species')" class="nav-button bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg font-medium transition-colors">
+                        🌿 Species
+                    </button>
+                    <button id="adminButton" onclick="showDatabaseSection()" class="nav-button bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-lg font-bold transition-colors border-2 border-yellow-400 shadow-lg hidden">
+                        🔐 ADMIN DATABASE
+                    </button>
+                    <button onclick="showSection('projects')" class="nav-button bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg font-medium transition-colors">
+                        🏗️ Projects
+                    </button>
+                    <button onclick="showSection('conservation')" class="nav-button bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg font-medium transition-colors">
+                        🛡️ Conservation
+                    </button>
+                    <button onclick="showSection('about')" class="nav-button bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg font-medium transition-colors">
+                        ℹ️ About
+                    </button>
+                    <button onclick="showSection('contact')" class="nav-button bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg font-medium transition-colors">
+                        📞 Contact
+                    </button>
+                    <button onclick="showAdminLogin()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors border-2 border-yellow-400 shadow-lg">
+                        🔐 Admin Login
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Home Section -->
+    <section id="home" class="section active">
+        <div class="container mx-auto px-6 py-12">
+            <!-- Hero Section -->
+            <div class="text-center mb-16">
+                <h2 id="heroTitle" class="text-5xl font-bold text-green-800 mb-6">Transform Your Space Into Paradise</h2>
+                <p id="heroDescription" class="text-xl text-gray-700 max-w-3xl mx-auto mb-8">
+                    Create stunning, eco-friendly landscapes with Indonesia's most beautiful native plants. Our expert team designs sustainable outdoor spaces that increase property value while supporting local wildlife and reducing maintenance costs.
+                </p>
+                <div class="flex justify-center gap-4 mb-8">
+                    <button id="heroButton" onclick="openWhatsApp('schedule')" class="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                        📞 Get Free Consultation
+                    </button>
+                    <button id="heroSecondaryButton" onclick="showSection('projects')" class="bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                        🏆 View Our Work
+                    </button>
+                </div>
+                
+                <div class="text-center mb-8">
+                    <p class="text-sm text-gray-500">
+                        Professional landscaping services for sustainable outdoor spaces
+                    </p>
+                </div>
+                
+                <!-- Hidden Admin Access (only visible after login) -->
+                <div id="adminAccessBox" class="bg-red-50 border-2 border-red-200 rounded-xl p-6 max-w-2xl mx-auto hidden">
+                    <h3 class="text-xl font-bold text-red-800 mb-3 text-center">🔐 Admin Database Access</h3>
+                    <p class="text-red-700 text-center mb-4">
+                        You are logged in as administrator. Click below to manage species data.
+                    </p>
+                    <button onclick="showDatabaseSection()" class="w-full mt-4 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-bold transition-colors shadow-lg">
+                        🔐 ACCESS ADMIN DATABASE
+                    </button>
+                    <button onclick="adminLogout()" class="w-full mt-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">
+                        🔓 Admin Logout
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid md:grid-cols-4 gap-8 mb-16">
+                <div class="bg-white rounded-xl shadow-lg p-8 text-center">
+                    <div class="text-4xl mb-4">🌳</div>
+                    <div class="text-3xl font-bold text-green-600" id="homeSpeciesCount">0</div>
+                    <div class="text-gray-600 font-medium">Native Species</div>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-8 text-center">
+                    <div class="text-4xl mb-4">🏝️</div>
+                    <div class="text-3xl font-bold text-blue-600" id="homeRegionCount">0</div>
+                    <div class="text-gray-600 font-medium">Regions</div>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-8 text-center">
+                    <div class="text-4xl mb-4">⚠️</div>
+                    <div class="text-3xl font-bold text-red-600" id="homeEndangeredCount">0</div>
+                    <div class="text-gray-600 font-medium">Endangered</div>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-8 text-center">
+                    <div class="text-4xl mb-4">🛡️</div>
+                    <div class="text-3xl font-bold text-purple-600" id="homeEndemicCount">0</div>
+                    <div class="text-gray-600 font-medium">Endemic</div>
+                </div>
+            </div>
+
+            <!-- Featured Species -->
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">🌟 Featured Species</h3>
+                <div id="featuredSpecies" class="grid md:grid-cols-3 gap-6">
+                    <!-- Featured species will be populated here -->
+                </div>
+            </div>
+            <!-- Bottom Gallery (embed) -->
+        <section class="bg-white rounded-xl shadow-lg p-6 mt-10">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-2xl font-bold text-gray-800">From Our Projects</h3>
+            <button id="hgAddBtn" aria-label="Add" title="Add"
+              class="w-11 h-11 rounded-full bg-sky-500 text-white border border-slate-300 flex items-center justify-center text-2xl leading-none shadow-md">＋</button>
+            <input id="hgAddInput" type="file" accept="image/*,.heic,.heif" capture="environment" multiple hidden />
+            <input id="hgReplaceInput" type="file" accept="image/*,.heic,.heif" hidden />
+          </div>
+          <div id="hgGallery" class="grid gap-3" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr))"></div>
+        </section>
+        
+        <!-- Lightbox for gallery -->
+        <div id="hgLightbox" class="fixed inset-0 hidden items-center justify-center p-6" style="background:rgba(0,0,0,.8); z-index:50;">
+          <div class="relative max-w-[92vw] max-h-[85vh]">
+            <img id="hgLbImg" class="block rounded-xl" style="max-width:92vw;max-height:80vh" alt="Preview" />
+            <div class="mt-3 flex flex-wrap gap-2 items-center">
+              <input id="hgLbCaption" type="text" placeholder="Edit caption" class="px-3 py-2 rounded-lg border border-slate-300 min-w-[220px]">
+              <button id="hgLbSave" class="px-3 py-2 rounded-lg bg-slate-800 text-white">Save</button>
+              <button id="hgLbReplace" class="px-3 py-2 rounded-lg bg-sky-600 text-white">Replace</button>
+              <button id="hgLbDelete" class="px-3 py-2 rounded-lg bg-rose-600 text-white">Delete</button>
+              <button id="hgLbClose"  class="px-3 py-2 rounded-lg bg-slate-200">Close</button>
+            </div>
+          </div>
+        </div>
+        
+        <script>
+        /* Load HEIC converter on demand */
+        function loadHeicLibIfNeeded(){
+          if (window.heic2any) return Promise.resolve();
+          return new Promise((resolve, reject) => {
+            const s = document.createElement('script');
+            s.src = "https://cdn.jsdelivr.net/npm/heic2any/dist/heic2any.min.js";
+            s.onload = resolve; s.onerror = () => reject(new Error('HEIC lib failed'));
+            document.head.appendChild(s);
+          });
+        }
+        </script>
+        
+        <script>
+        /* === Embedded Bottom Gallery (admin/rimbun2024 to update; rimbun123 to delete) === */
+        (function(){
+          const STORE_KEY   = 'home.bottom.gallery.v1';
+          const ADMIN_USER  = 'admin';
+          const ADMIN_PASS  = 'rimbun2024';
+          const DELETE_CODE = 'rimbun123';
+        
+          const addBtn       = document.getElementById('hgAddBtn');
+          const addInput     = document.getElementById('hgAddInput');
+          const replaceInput = document.getElementById('hgReplaceInput');
+          const gallery      = document.getElementById('hgGallery');
+        
+          const lb      = document.getElementById('hgLightbox');
+          const lbImg   = document.getElementById('hgLbImg');
+          const lbCap   = document.getElementById('hgLbCaption');
+          const lbSave  = document.getElementById('hgLbSave');
+          const lbRep   = document.getElementById('hgLbReplace');
+          const lbDel   = document.getElementById('hgLbDelete');
+          const lbClose = document.getElementById('hgLbClose');
+        
+          const adminBox = document.getElementById('adminAccessBox');
+        
+          let items = []; let lbIndex = -1;
+        
+          // ---- Admin helpers (do NOT change your existing admin code) ----
+          const FLAG = 'isAdmin';
+          function isAdmin(){ return sessionStorage.getItem(FLAG) === '1'; }
+          function promptLogin(){
+            const u = prompt('Admin username:'); if (u===null) return false;
+            const p = prompt('Admin password:'); if (p===null) return false;
+            if ((u||'').trim().toLowerCase() === ADMIN_USER && (p||'').trim() === ADMIN_PASS){
+              sessionStorage.setItem(FLAG,'1'); adminBox?.classList.remove('hidden'); alert('Admin enabled'); return true;
+            } alert('Wrong credentials'); return false;
+          }
+          function ensureAdmin(){ return isAdmin() || promptLogin(); }
+          // Keyboard shortcut: Cmd+Opt+D (Mac) / Ctrl+Alt+D (Win/Linux)
+          window.addEventListener('keydown', (e)=>{
+            const mac = e.metaKey && e.altKey && (e.key==='d'||e.key==='D');
+            const win = e.ctrlKey && e.altKey && (e.key==='d'||e.key==='D');
+            if (mac || win) promptLogin();
+          });
+        
+          // Restore state
+          try{ items = JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); }catch{ items=[]; }
+          render();
+          if (isAdmin()) adminBox?.classList.remove('hidden');
+        
+          // Add
+          addBtn.addEventListener('click', ()=>{ if (!ensureAdmin()) return; addInput.click(); });
+          addInput.addEventListener('change', async (e)=>{
+            if (!e.target.files?.length) return;
+            if (!ensureAdmin()) { e.target.value=''; return; }
+            await addFiles([...e.target.files]); addInput.value='';
+          });
+        
+          // Paste & DnD (admin only)
+          window.addEventListener('paste', async (e)=>{
+            const files = [...(e.clipboardData?.files||[])].filter(f=>f.type.startsWith('image/') || /\.hei[c|f]$/i.test(f.name));
+            if (!files.length) return; if (!ensureAdmin()) return; await addFiles(files);
+          });
+          ['dragenter','dragover'].forEach(t=>window.addEventListener(t, e=>e.preventDefault()));
+          window.addEventListener('drop', async (e)=>{
+            e.preventDefault();
+            const files = [...(e.dataTransfer?.files||[])].filter(f=>f.type.startsWith('image/') || /\.hei[c|f]$/i.test(f.name));
+            if (!files.length) return; if (!ensureAdmin()) return; await addFiles(files);
+          });
+        
+          async function addFiles(files){
+            for (let f of files){
+              f = await ensureWebFriendly(f);
+              const dataUrl = await readAndCompress(f, 1600);
+              items.unshift({ id: crypto.randomUUID(), src: dataUrl, caption: makeCaption(f.name) });
+            }
+            persist(); render();
+          }
+        
+          function render(){
+            gallery.innerHTML='';
+            if (!items.length){ const empty=document.createElement('div'); empty.className='text-sm text-slate-500'; empty.textContent='No photos yet.'; gallery.appendChild(empty); return; }
+            items.forEach((it,i)=>{
+              const card = document.createElement('figure');
+              card.className='relative rounded-xl overflow-hidden bg-slate-200 shadow';
+              card.innerHTML = `
+                <img class="block w-full" style="height:160px;object-fit:cover;cursor:pointer" data-idx="${i}" src="${it.src}" alt="${escapeHtml(it.caption||'Photo')}">
+                <figcaption class="absolute left-0 right-0 bottom-0 text-white text-sm px-2 py-2"
+                  style="background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.55))">
+                  <span class="inline-block max-w-[75%] truncate" contenteditable="${isAdmin()?'true':'false'}" data-idx="${i}">
+                    ${escapeHtml(it.caption||'')}
+                  </span>
+                  <span class="float-right flex gap-2">
+                    <button class="px-2 py-1 rounded bg-black/60 text-white text-xs" data-act="replace" data-idx="${i}">↻</button>
+                    <button class="px-2 py-1 rounded bg-black/60 text-white text-xs" data-act="delete"  data-idx="${i}">🗑</button>
+                  </span>
+                </figcaption>`;
+              card.querySelector('img').addEventListener('click',()=>openLb(i));
+              gallery.appendChild(card);
+            });
+          }
+        
+          // Inline caption save
+          gallery.addEventListener('blur',(e)=>{
+            const el = e.target.closest('[contenteditable][data-idx]'); if (!el) return;
+            if (!isAdmin()) { render(); return; }
+            const i = +el.dataset.idx; items[i].caption = el.textContent.replace('↻','').replace('🗑','').trim(); persist();
+          }, true);
+          gallery.addEventListener('keydown',(e)=>{ const el = e.target.closest('[contenteditable]'); if (el && e.key==='Enter'){ e.preventDefault(); el.blur(); } });
+        
+          // Replace / Delete (delete always asks for rimbun123)
+          gallery.addEventListener('click',(e)=>{
+            const btn = e.target.closest('button[data-act]'); if (!btn) return;
+            const i = +btn.dataset.idx;
+            if (btn.dataset.act==='replace'){ if (!ensureAdmin()) return; replaceInput.dataset.idx=i; replaceInput.click(); }
+            if (btn.dataset.act==='delete'){
+              const ok = (typeof window.requireDeleteCode==='function')
+                ? window.requireDeleteCode()
+                : ((prompt('Enter code to delete')||'').trim()===DELETE_CODE);
+              if (!ok){ alert('Wrong code'); return; }
+              items.splice(i,1); persist(); render();
+            }
+          });
+        
+          replaceInput.addEventListener('change', async (e)=>{
+            const i = +replaceInput.dataset.idx; const f0 = e.target.files?.[0];
+            if (!f0 || !Number.isInteger(i)) { replaceInput.value=''; return; }
+            if (!ensureAdmin()) { replaceInput.value=''; return; }
+            const f = await ensureWebFriendly(f0);
+            const dataUrl = await readAndCompress(f,1600);
+            items[i].src = dataUrl; persist(); render(); replaceInput.value='';
+            if (lbIndex===i && lb.classList.contains('flex')) lbImg.src = dataUrl;
+          });
+        
+          // Lightbox
+          function openLb(i){ lbIndex=i; lbImg.src=items[i].src; lbCap.value=items[i].caption||''; lb.classList.remove('hidden'); lb.classList.add('flex'); }
+          function closeLb(){ lb.classList.remove('flex'); lb.classList.add('hidden'); lbIndex=-1; }
+          lbClose.addEventListener('click', closeLb);
+          lb.addEventListener('click', e=>{ if (e.target===lb) closeLb(); });
+          window.addEventListener('keydown', e=>{ if (e.key==='Escape' && lb.classList.contains('flex')) closeLb(); });
+          lbSave.addEventListener('click', ()=>{ if (lbIndex<0) return; if (!ensureAdmin()) return; items[lbIndex].caption=lbCap.value.trim(); persist(); render(); closeLb(); });
+          lbRep.addEventListener('click', ()=>{ if (lbIndex<0) return; if (!ensureAdmin()) return; replaceInput.dataset.idx=lbIndex; replaceInput.click(); });
+          lbDel.addEventListener('click', ()=>{
+            if (lbIndex<0) return;
+            const ok = (typeof window.requireDeleteCode==='function')
+              ? window.requireDeleteCode()
+              : ((prompt('Enter code to delete')||'').trim()===DELETE_CODE);
+            if (!ok){ alert('Wrong code'); return; }
+            items.splice(lbIndex,1); persist(); render(); closeLb();
+          });
+        
+          // HEIC → JPEG
+          function looksLikeHeic(file){ return /image\/heic|image\/heif/i.test(file.type) || /\.hei[c|f]$/i.test(file.name||''); }
+          async function ensureWebFriendly(file){
+            if (!looksLikeHeic(file)) return file;
+            try{
+              await loadHeicLibIfNeeded();
+              const out = await window.heic2any({ blob:file, toType:'image/jpeg', quality:0.9 });
+              const blob = Array.isArray(out) ? out[0] : out;
+              return new File([blob], (file.name||'image').replace(/\.[^.]+$/,'')+'.jpg', { type:'image/jpeg' });
+            }catch(err){ console.error('HEIC conversion failed', err); alert('HEIC conversion failed. Please choose JPG/PNG instead.'); return file; }
+          }
+        
+          // storage & image helpers
+          function persist(){ localStorage.setItem(STORE_KEY, JSON.stringify(items)); }
+          function makeCaption(name){ try{ return (name||'').replace(/\.[^.]+$/,'').replace(/[\-_]/g,' ').trim(); }catch{ return ''; } }
+          async function readAndCompress(file, maxW=1600){
+            const dataUrl = await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); });
+            const img = await new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=dataUrl; });
+            const scale = Math.min(1, maxW / img.width);
+            if (scale >= 1) return dataUrl;
+            const c=document.createElement('canvas'); c.width=Math.round(img.width*scale); c.height=Math.round(img.height*scale);
+            c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+            return c.toDataURL('image/jpeg',0.88);
+          }
+          function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+        })();
+        </script>
+
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="section">
+        <div class="container mx-auto px-6 py-12">
+            <div class="text-center mb-12">
+                <h2 id="servicesTitle" class="text-4xl font-bold text-green-800 mb-4">🌳 Professional Landscaping Services</h2>
+                <p id="servicesSubtitle" class="text-xl text-gray-700 max-w-2xl mx-auto">
+                    Expert solutions using native Indonesian plants for sustainable, beautiful outdoor spaces
+                </p>
+                <div id="adminServicesControls" class="hidden mt-6">
+                    <button onclick="editServicesContent()" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-lg">
+                        ✏️ Edit Services Content
+                    </button>
+                </div>
+            </div>
+
+            <div id="servicesGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                <!-- Services will be populated dynamically -->
+            </div>
+
+            <div class="bg-gradient-to-r from-green-50 to-teal-50 rounded-xl p-8 text-center">
+                <h3 class="text-2xl font-bold text-green-800 mb-6">Why Choose Native Plants?</h3>
+                <div class="grid md:grid-cols-4 gap-6 mb-8">
+                    <div>
+                        <div class="text-4xl mb-3">🌍</div>
+                        <h4 class="font-bold text-gray-800 mb-2">Eco-Friendly</h4>
+                        <p class="text-sm text-gray-600">Support local ecosystems and biodiversity</p>
+                    </div>
+                    <div>
+                        <div class="text-4xl mb-3">💧</div>
+                        <h4 class="font-bold text-gray-800 mb-2">Water Efficient</h4>
+                        <p class="text-sm text-gray-600">Adapted to local rainfall patterns</p>
+                    </div>
+                    <div>
+                        <div class="text-4xl mb-3">🔧</div>
+                        <h4 class="font-bold text-gray-800 mb-2">Low Maintenance</h4>
+                        <p class="text-sm text-gray-600">Naturally suited to local conditions</p>
+                    </div>
+                    <div>
+                        <div class="text-4xl mb-3">🦋</div>
+                        <h4 class="font-bold text-gray-800 mb-2">Wildlife Friendly</h4>
+                        <p class="text-sm text-gray-600">Provide food and habitat for local fauna</p>
+                    </div>
+                </div>
+                <div class="flex justify-center gap-4">
+                    <button onclick="openWhatsApp('consultation')" class="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                        💬 Get Expert Consultation
+                    </button>
+                    <button onclick="showSection('projects')" class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                        🏆 See Our Results
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Species Section -->
+    <section id="species" class="section">
+        <div class="container mx-auto px-6 py-12">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-green-800 mb-4">🌿 Species Gallery</h2>
+                <p class="text-xl text-gray-700 max-w-2xl mx-auto mb-6">
+                    Browse through our comprehensive collection of Indonesian native species
+                </p>
+                <div id="adminSpeciesControls" class="hidden">
+                    <div class="flex justify-center gap-4 mb-4">
+                        <button onclick="addNewSpecies()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-lg">
+                            ➕ Add New Species
+                        </button>
+                        <button onclick="exportDatabase()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-medium transition-colors shadow-lg">
+                            📤 Export Database
+                        </button>
+                        <button onclick="importDatabase()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 rounded-lg font-medium transition-colors shadow-lg">
+                            📥 Import Database
+                        </button>
+                    </div>
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4 max-w-2xl mx-auto">
+                        <p class="text-red-700 text-sm">
+                            🔐 <strong>Admin Mode Active:</strong> You can now edit, delete, and manage species directly from this gallery.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search and Filters -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                <div class="grid md:grid-cols-4 gap-4">
+                    <input type="text" id="speciesSearch" placeholder="Search species..." 
+                           class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500"
+                           oninput="filterSpeciesDisplay()">
+                    <select id="speciesCategoryFilter" onchange="filterSpeciesDisplay()" 
+                            class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500">
+                        <option value="">All Categories</option>
+                    </select>
+                    <select id="speciesRegionFilter" onchange="filterSpeciesDisplay()" 
+                            class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500">
+                        <option value="">All Regions</option>
+                    </select>
+                    <button onclick="clearSpeciesFilters()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors">
+                        Clear Filters
+                    </button>
+                </div>
+            </div>
+
+            <!-- Species Grid -->
+            <div id="speciesDisplayGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Species cards will be populated here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Database Management Section -->
+    <section id="database" class="section">
+        <div class="container mx-auto px-6 py-12">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-green-800 mb-4">🗂️ Database Management</h2>
+                <p class="text-xl text-gray-700 max-w-2xl mx-auto mb-8">
+                    Add, edit, and manage species in the database with full image upload capabilities
+                </p>
+                <div class="flex justify-center gap-4 mb-4">
+                    <button onclick="addNewSpecies()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-lg">
+                        ➕ Add Species
+                    </button>
+                    <button onclick="exportDatabase()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-lg">
+                        📤 Export
+                    </button>
+                    <button onclick="importDatabase()" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-lg">
+                        📥 Import
+                    </button>
+                </div>
+                <div class="flex justify-center">
+                    <button onclick="adminLogout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">
+                        🔓 Admin Logout
+                    </button>
+                </div>
+            </div>
+
+            <!-- Database Stats -->
+            <div class="grid md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                    <div class="text-3xl font-bold text-green-600" id="totalSpecies">0</div>
+                    <div class="text-sm text-green-800 font-medium">Total Species</div>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                    <div class="text-3xl font-bold text-blue-600" id="totalCategories">0</div>
+                    <div class="text-sm text-blue-800 font-medium">Categories</div>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                    <div class="text-3xl font-bold text-purple-600" id="totalRegions">0</div>
+                    <div class="text-sm text-purple-800 font-medium">Regions</div>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                    <div class="text-3xl font-bold text-yellow-600" id="endemicCount">0</div>
+                    <div class="text-sm text-yellow-800 font-medium">Endemic Species</div>
+                </div>
+            </div>
+
+            <!-- Search and Filters -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                <div class="grid md:grid-cols-4 gap-4 mb-4">
+                    <input type="text" id="searchSpecies" placeholder="Search species..." 
+                           class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500"
+                           oninput="filterSpecies()">
+                    <select id="categoryFilter" onchange="filterSpecies()" 
+                            class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500">
+                        <option value="">All Categories</option>
+                    </select>
+                    <select id="regionFilter" onchange="filterSpecies()" 
+                            class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500">
+                        <option value="">All Regions</option>
+                    </select>
+                    <button onclick="clearFilters()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors">
+                        Clear Filters
+                    </button>
+                </div>
+            </div>
+
+            <!-- Species Management Grid -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-gray-800">🗂️ Species Database</h3>
+                    <div class="text-sm text-gray-600">
+                        <span id="displayedCount">0</span> species displayed
+                    </div>
+                </div>
+                
+                <div id="speciesGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Species cards will be populated here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section">
+        <div class="container mx-auto px-6 py-12">
+            <div class="text-center mb-12">
+                <h2 id="projectsTitle" class="text-4xl font-bold text-green-800 mb-4">🏗️ Our Success Stories</h2>
+                <p id="projectsSubtitle" class="text-xl text-gray-700 max-w-2xl mx-auto">
+                    Showcasing our award-winning landscaping projects across Indonesia using native plants and sustainable practices
+                </p>
+                <div id="adminProjectsControls" class="hidden mt-6">
+                    <button onclick="editProjectsContent()" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-lg">
+                        ✏️ Edit Projects Content
+                    </button>
+                </div>
+            </div>
+
+            <div id="projectsGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                <!-- Projects will be populated dynamically -->
+            </div>
+
+            <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-8 text-center">
+                <h3 class="text-2xl font-bold text-green-800 mb-6">Project Impact</h3>
+                <div class="grid md:grid-cols-4 gap-6 mb-8">
+                    <div>
+                        <div class="text-4xl font-bold text-green-600 mb-2">50+</div>
+                        <p class="text-gray-700 font-medium">Projects Completed</p>
+                    </div>
+                    <div>
+                        <div class="text-4xl font-bold text-blue-600 mb-2">100+</div>
+                        <p class="text-gray-700 font-medium">Hectares Landscaped</p>
+                    </div>
+                    <div>
+                        <div class="text-4xl font-bold text-purple-600 mb-2">300+</div>
+                        <p class="text-gray-700 font-medium">Native Species Used</p>
+                    </div>
+                    <div>
+                        <div class="text-4xl font-bold text-teal-600 mb-2">98%</div>
+                        <p class="text-gray-700 font-medium">Client Satisfaction</p>
+                    </div>
+                </div>
+                <div class="flex justify-center gap-4">
+                    <button onclick="openWhatsApp('project')" class="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                        🚀 Start Your Project
+                    </button>
+                    <button onclick="openInstagram()" class="bg-gradient-to-r from-pink-600 to-purple-700 hover:from-pink-700 hover:to-purple-800 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                        📸 See More on Instagram
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conservation Section -->
+    <section id="conservation" class="section">
+        <div class="container mx-auto px-6 py-12">
+            <div class="text-center mb-12">
+                <h2 id="conservationTitle" class="text-4xl font-bold text-green-800 mb-4">🛡️ Conservation & Sustainability</h2>
+                <p id="conservationSubtitle" class="text-xl text-gray-700 max-w-2xl mx-auto">
+                    Our commitment to protecting Indonesia's natural heritage through sustainable landscaping practices
+                </p>
+                <div id="adminConservationControls" class="hidden mt-6">
+                    <button onclick="editConservationContent()" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-lg">
+                        ✏️ Edit Conservation Content
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-green-50 to-teal-50 rounded-xl p-8 mb-12 text-center">
+                <h3 class="text-2xl font-bold text-green-800 mb-4">Our Conservation Mission</h3>
+                <p id="conservationMission" class="text-lg text-gray-700 max-w-4xl mx-auto">
+                    We believe that beautiful landscapes and environmental conservation go hand in hand. Every project we undertake contributes to biodiversity preservation and ecosystem restoration.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">📊 Conservation Statistics</h3>
+                    <div id="conservationStats" class="space-y-4">
+                        <!-- Conservation stats will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">🚨 Priority Species</h3>
+                    <div id="prioritySpecies" class="space-y-4">
+                        <!-- Priority species will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">🌍 Conservation Initiatives</h3>
+                <div id="conservationInitiatives" class="grid md:grid-cols-3 gap-6">
+                    <!-- Conservation initiatives will be populated dynamically -->
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-green-600 to-teal-600 rounded-xl p-8 text-white text-center">
+                <h3 class="text-2xl font-bold mb-6">🌱 Our Conservation Impact</h3>
+                <div id="conservationImpact" class="grid md:grid-cols-4 gap-6 mb-8">
+                    <!-- Impact stats will be populated dynamically -->
+                </div>
+                <div class="flex justify-center gap-4">
+                    <button onclick="openWhatsApp('conservation')" class="bg-white text-green-600 hover:bg-gray-100 px-8 py-3 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                        🤝 Partner With Us
+                    </button>
+                    <button onclick="showSection('species')" class="bg-green-800 hover:bg-green-900 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                        🌿 Explore Species
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+        <div class="container mx-auto px-6 py-12">
+            <div class="text-center mb-12">
+                <h2 id="contactTitle" class="text-4xl font-bold text-green-800 mb-4">📞 Contact Us</h2>
+                <p id="contactSubtitle" class="text-xl text-gray-700 max-w-2xl mx-auto">
+                    Ready to transform your outdoor space with native Indonesian plants? Get in touch with our landscaping experts
+                </p>
+                <div id="adminContactControls" class="hidden mt-6">
+                    <button onclick="editContactContent()" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-lg">
+                        ✏️ Edit Contact Content
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12 mb-12">
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h3 class="text-2xl font-bold text-green-800 mb-6">Get a Free Consultation</h3>
+                    <form class="space-y-6">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
+                                <input type="text" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500" placeholder="Your first name">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Last Name *</label>
+                                <input type="text" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500" placeholder="Your last name">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                            <input type="email" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500" placeholder="your.email@example.com">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                            <input type="tel" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500" placeholder="+62 858 1131 8500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Project Type</label>
+                            <select class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500">
+                                <option value="">Select project type</option>
+                                <option value="residential">Residential Garden</option>
+                                <option value="commercial">Commercial Landscaping</option>
+                                <option value="restoration">Garden Restoration</option>
+                                <option value="urban-forestry">Urban Forestry</option>
+                                <option value="water-wise">Water-Wise Garden</option>
+                                <option value="wildlife">Wildlife Garden</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Project Location</label>
+                            <input type="text" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500" placeholder="City, Province">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Project Size (approximate)</label>
+                            <select class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500">
+                                <option value="">Select size range</option>
+                                <option value="small">Small (< 500 m²)</option>
+                                <option value="medium">Medium (500 - 2000 m²)</option>
+                                <option value="large">Large (2000 - 5000 m²)</option>
+                                <option value="xlarge">Extra Large (> 5000 m²)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                            <textarea rows="4" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500" placeholder="Tell us about your project vision, timeline, and any specific requirements..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg font-medium transition-colors shadow-lg">
+                            📧 Send Message
+                        </button>
+                        
+                        <p class="text-xs text-gray-500 text-center">
+                            * This is a demo form. In a real website, this would send your message to our team.
+                        </p>
+                    </form>
+                </div>
+
+                <div class="space-y-8">
+                    <div class="bg-white rounded-xl shadow-lg p-8">
+                        <h3 class="text-2xl font-bold text-green-800 mb-6">Contact Information</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <div class="text-2xl mr-4">📍</div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800">Office Address</h4>
+                                    <p class="text-gray-600">Jl. Raya Bogor No. 123<br>Jakarta Selatan 12345<br>Indonesia</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="text-2xl mr-4">📞</div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800">Phone</h4>
+                                    <p class="text-gray-600">+62 858 1131 8500</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="text-2xl mr-4">📱</div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800">WhatsApp</h4>
+                                    <p class="text-gray-600">+62 858 1131 8500</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="text-2xl mr-4">📧</div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800">Email</h4>
+                                    <p class="text-gray-600">info@rimbunlandscape.com</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="text-2xl mr-4">📸</div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800">Instagram</h4>
+                                    <p class="text-gray-600">@rimbunlandscape</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="text-2xl mr-4">🕒</div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800">Business Hours</h4>
+                                    <p class="text-gray-600">Monday - Friday: 8:00 AM - 6:00 PM<br>Saturday: 8:00 AM - 4:00 PM<br>Sunday: Closed</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-lg p-8">
+                        <h3 class="text-2xl font-bold text-green-800 mb-6">Service Areas</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-center p-4 bg-green-50 rounded-lg">
+                                <div class="text-2xl mb-2">🏙️</div>
+                                <h4 class="font-bold text-gray-800 text-sm">Jakarta</h4>
+                                <p class="text-xs text-gray-600">Greater Jakarta Area</p>
+                            </div>
+                            <div class="text-center p-4 bg-blue-50 rounded-lg">
+                                <div class="text-2xl mb-2">🌋</div>
+                                <h4 class="font-bold text-gray-800 text-sm">Bandung</h4>
+                                <p class="text-xs text-gray-600">West Java</p>
+                            </div>
+                            <div class="text-center p-4 bg-yellow-50 rounded-lg">
+                                <div class="text-2xl mb-2">🏛️</div>
+                                <h4 class="font-bold text-gray-800 text-sm">Yogyakarta</h4>
+                                <p class="text-xs text-gray-600">Central Java</p>
+                            </div>
+                            <div class="text-center p-4 bg-purple-50 rounded-lg">
+                                <div class="text-2xl mb-2">🏝️</div>
+                                <h4 class="font-bold text-gray-800 text-sm">Bali</h4>
+                                <p class="text-xs text-gray-600">Island Province</p>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-4 text-center">
+                            We also serve other areas in Java and surrounding islands. Contact us to discuss your project location.
+                        </p>
+                    </div>
+
+                    <div class="bg-gradient-to-r from-green-500 to-teal-600 rounded-xl shadow-lg p-8 text-white text-center">
+                        <h3 class="text-2xl font-bold mb-4">🌱 Free Site Visit</h3>
+                        <p class="mb-6">
+                            Schedule a complimentary consultation and site assessment for projects within our service areas.
+                        </p>
+                        <button onclick="alert('Thank you for your interest! Please fill out the contact form above to schedule your free consultation.')" 
+                                class="bg-white text-green-600 hover:bg-gray-100 px-6 py-3 rounded-lg font-bold transition-colors">
+                            Schedule Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="container mx-auto px-6 py-12">
+            <div class="text-center mb-12">
+                <h2 id="aboutTitle" class="text-4xl font-bold text-green-800 mb-4">ℹ️ About Rimbun Landscape</h2>
+                <p id="aboutSubtitle" class="text-xl text-gray-700 max-w-2xl mx-auto">
+                    Indonesia's leading sustainable landscaping company, transforming outdoor spaces with native plants since 2020
+                </p>
+                <div id="adminAboutControls" class="hidden mt-6">
+                    <button onclick="editAboutContent()" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-lg">
+                        ✏️ Edit About Content
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-green-50 to-teal-50 rounded-xl p-8 mb-12 text-center">
+                <h3 class="text-2xl font-bold text-green-800 mb-4">Our Story</h3>
+                <p id="aboutStory" class="text-lg text-gray-700 max-w-4xl mx-auto">
+                    Founded by a team of passionate landscape architects and conservation biologists, Rimbun Landscape was born from a simple belief: that beautiful outdoor spaces should enhance, not harm, the natural environment. We specialize in creating stunning landscapes using Indonesia's incredible native plant diversity.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12 mb-12">
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">🎯 Our Mission</h3>
+                    <p id="aboutMission" class="text-gray-700 mb-6">
+                        To transform Indonesia's landscapes through sustainable design practices that celebrate native biodiversity while creating beautiful, functional outdoor spaces. We believe that landscaping should work in harmony with nature, not against it.
+                    </p>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">🔮 Our Vision</h3>
+                    <p id="aboutVision" class="text-gray-700">
+                        To be Indonesia's most trusted partner for sustainable landscaping, leading the way in native plant conservation and eco-friendly design practices.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">💎 Our Values</h3>
+                    <div id="aboutValues" class="space-y-4">
+                        <!-- Values will be populated dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-4 gap-6 mb-12">
+                <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 text-center">
+                    <div class="text-4xl mb-3">🌱</div>
+                    <h3 class="text-lg font-bold text-green-800 mb-2">Founded</h3>
+                    <p id="aboutFounded" class="text-2xl font-bold text-green-600 mb-1">2020</p>
+                    <p class="text-sm text-gray-600">Years of Excellence</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 text-center">
+                    <div class="text-4xl mb-3">👥</div>
+                    <h3 class="text-lg font-bold text-blue-800 mb-2">Team</h3>
+                    <p id="aboutTeamSize" class="text-2xl font-bold text-blue-600 mb-1">15+ Experts</p>
+                    <p class="text-sm text-gray-600">Professionals</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 text-center">
+                    <div class="text-4xl mb-3">🏆</div>
+                    <h3 class="text-lg font-bold text-purple-800 mb-2">Awards</h3>
+                    <p id="aboutAwards" class="text-2xl font-bold text-purple-600 mb-1">5+ Industry Awards</p>
+                    <p class="text-sm text-gray-600">Recognition</p>
+                </div>
+
+                <div class="bg-gradient-to-br from-teal-50 to-teal-100 rounded-xl p-6 text-center">
+                    <div class="text-4xl mb-3">🚀</div>
+                    <h3 class="text-lg font-bold text-teal-800 mb-2">Projects</h3>
+                    <p id="aboutProjects" class="text-2xl font-bold text-teal-600 mb-1">50+ Completed Projects</p>
+                    <p class="text-sm text-gray-600">Success Stories</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">🎓 Our Certifications</h3>
+                <div id="aboutCertifications" class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Certifications will be populated dynamically -->
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-green-600 to-teal-600 rounded-xl p-8 text-white text-center">
+                <h3 class="text-2xl font-bold mb-6">🤝 Why Choose Rimbun Landscape?</h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div>
+                        <div class="text-4xl mb-3">🌿</div>
+                        <h4 class="font-bold mb-2">Native Plant Experts</h4>
+                        <p class="text-sm opacity-90">Deep knowledge of Indonesian flora and their growing requirements</p>
+                    </div>
+                    <div>
+                        <div class="text-4xl mb-3">🎨</div>
+                        <h4 class="font-bold mb-2">Custom Design</h4>
+                        <p class="text-sm opacity-90">Tailored solutions that match your vision and site conditions</p>
+                    </div>
+                    <div>
+                        <div class="text-4xl mb-3">🌍</div>
+                        <h4 class="font-bold mb-2">Eco-Friendly</h4>
+                        <p class="text-sm opacity-90">Sustainable practices that benefit both you and the environment</p>
+                    </div>
+                    <div>
+                        <div class="text-4xl mb-3">🔧</div>
+                        <h4 class="font-bold mb-2">Full Service</h4>
+                        <p class="text-sm opacity-90">From design to installation to ongoing maintenance support</p>
+                    </div>
+                </div>
+                <div class="flex justify-center gap-4">
+                    <button onclick="openWhatsApp('about')" class="bg-white text-green-600 hover:bg-gray-100 px-8 py-3 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                        💬 Let's Talk
+                    </button>
+                    <button onclick="showSection('services')" class="bg-green-800 hover:bg-green-900 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                        🌳 Our Services
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add/Edit Species Modal -->
+    <div id="speciesModal" class="fixed inset-0 modal-overlay hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+                <div class="bg-green-600 text-white p-6 rounded-t-xl">
+                    <div class="flex justify-between items-center">
+                        <h3 id="modalTitle" class="text-2xl font-bold">Add New Species</h3>
+                        <button onclick="closeModal()" class="text-white hover:text-gray-200 text-3xl transition-colors">×</button>
+                    </div>
+                </div>
+                
+                <form id="speciesForm" class="p-6 space-y-6">
+                    <input type="hidden" id="speciesId">
+                    
+                    <!-- Image Upload Section -->
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4">🖼️ Species Image</h4>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Upload Image</label>
+                                <div id="imageUploadArea" class="image-upload-area" onclick="document.getElementById('imageUpload').click()">
+                                    <div id="uploadPlaceholder">
+                                        <div class="text-4xl mb-2">📷</div>
+                                        <p class="text-gray-600">Click to upload image</p>
+                                        <p class="text-xs text-gray-500 mt-1">Or drag and drop here</p>
+                                    </div>
+                                    <div id="imagePreview" class="hidden">
+                                        <img id="previewImg" src="" alt="Preview" class="max-w-full h-32 object-cover rounded-lg mx-auto">
+                                        <p class="text-sm text-gray-600 mt-2">Click to change image</p>
+                                    </div>
+                                </div>
+                                <input type="file" id="imageUpload" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Or Use Emoji</label>
+                                <input type="text" id="emojiInput" placeholder="🌳 Enter emoji" 
+                                       class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 text-2xl text-center"
+                                       oninput="updateEmojiPreview()">
+                                <div class="mt-4 text-center">
+                                    <div class="text-6xl" id="emojiPreview">🌱</div>
+                                    <p class="text-xs text-gray-500 mt-2">Emoji preview</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Basic Information -->
+                    <div class="bg-blue-50 rounded-lg p-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4">📝 Basic Information</h4>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Scientific Name *</label>
+                                <input type="text" id="scientificName" required 
+                                       class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500"
+                                       placeholder="e.g., Tectona grandis">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Common Name *</label>
+                                <input type="text" id="commonName" required 
+                                       class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500"
+                                       placeholder="e.g., Teak">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Local Name</label>
+                                <input type="text" id="localName" 
+                                       class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500"
+                                       placeholder="e.g., Jati">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Family</label>
+                                <input type="text" id="family" 
+                                       class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500"
+                                       placeholder="e.g., Lamiaceae">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Classification -->
+                    <div class="bg-purple-50 rounded-lg p-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4">🏷️ Classification</h4>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Category *</label>
+                                <select id="category" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500">
+                                    <option value="">Select Category</option>
+                                    <option value="Canopy Tree">Canopy Tree</option>
+                                    <option value="Understory Tree">Understory Tree</option>
+                                    <option value="Shrub">Shrub</option>
+                                    <option value="Ground Cover">Ground Cover</option>
+                                    <option value="Vine">Vine</option>
+                                    <option value="Palm">Palm</option>
+                                    <option value="Bamboo">Bamboo</option>
+                                    <option value="Fern">Fern</option>
+                                    <option value="Grass">Grass</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Region *</label>
+                                <select id="region" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500">
+                                    <option value="">Select Region</option>
+                                    <option value="Java">Java</option>
+                                    <option value="Sumatra">Sumatra</option>
+                                    <option value="Kalimantan">Kalimantan</option>
+                                    <option value="Sulawesi">Sulawesi</option>
+                                    <option value="Papua">Papua</option>
+                                    <option value="Maluku">Maluku</option>
+                                    <option value="Nusa Tenggara">Nusa Tenggara</option>
+                                    <option value="All Indonesia">All Indonesia</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Physical Characteristics -->
+                    <div class="bg-yellow-50 rounded-lg p-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4">📏 Physical Characteristics</h4>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Max Height (m)</label>
+                                <input type="number" id="maxHeight" min="0" step="0.1" 
+                                       class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500"
+                                       placeholder="e.g., 40">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Max Diameter (cm)</label>
+                                <input type="number" id="maxDiameter" min="0" step="0.1" 
+                                       class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500"
+                                       placeholder="e.g., 150">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Growth Rate</label>
+                                <select id="growthRate" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500">
+                                    <option value="">Select Rate</option>
+                                    <option value="Slow">Slow</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Fast">Fast</option>
+                                    <option value="Very Fast">Very Fast</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Uses -->
+                    <div class="bg-green-50 rounded-lg p-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4">🔧 Uses & Applications</h4>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-white transition-colors">
+                                <input type="checkbox" id="useTimber" class="mr-3 text-green-600">
+                                <span class="text-sm font-medium">🪵 Timber</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-white transition-colors">
+                                <input type="checkbox" id="useFruit" class="mr-3 text-green-600">
+                                <span class="text-sm font-medium">🍎 Fruit</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-white transition-colors">
+                                <input type="checkbox" id="useMedicine" class="mr-3 text-green-600">
+                                <span class="text-sm font-medium">💊 Medicine</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-white transition-colors">
+                                <input type="checkbox" id="useWildlifeFood" class="mr-3 text-green-600">
+                                <span class="text-sm font-medium">🦋 Wildlife Food</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-white transition-colors">
+                                <input type="checkbox" id="useOrnamental" class="mr-3 text-green-600">
+                                <span class="text-sm font-medium">🌺 Ornamental</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-white transition-colors">
+                                <input type="checkbox" id="useErosionControl" class="mr-3 text-green-600">
+                                <span class="text-sm font-medium">🌍 Erosion Control</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-white transition-colors">
+                                <input type="checkbox" id="useShade" class="mr-3 text-green-600">
+                                <span class="text-sm font-medium">☂️ Shade</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-white transition-colors">
+                                <input type="checkbox" id="useWindbreak" class="mr-3 text-green-600">
+                                <span class="text-sm font-medium">💨 Windbreak</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-white transition-colors">
+                                <input type="checkbox" id="useCarbon" class="mr-3 text-green-600">
+                                <span class="text-sm font-medium">🌱 Carbon Storage</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Growing Conditions -->
+                    <div class="bg-cyan-50 rounded-lg p-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4">🌱 Growing Conditions</h4>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Soil Type</label>
+                                <select id="soilType" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500">
+                                    <option value="">Any Soil</option>
+                                    <option value="Clay">Clay</option>
+                                    <option value="Sandy">Sandy</option>
+                                    <option value="Loamy">Loamy</option>
+                                    <option value="Rocky">Rocky</option>
+                                    <option value="Peat">Peat</option>
+                                    <option value="Volcanic">Volcanic</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Water Requirements</label>
+                                <select id="waterReq" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500">
+                                    <option value="">Select Requirement</option>
+                                    <option value="Low">Low</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="High">High</option>
+                                    <option value="Very High">Very High</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Light Requirements</label>
+                                <select id="lightReq" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500">
+                                    <option value="">Select Requirement</option>
+                                    <option value="Full Sun">Full Sun</option>
+                                    <option value="Partial Sun">Partial Sun</option>
+                                    <option value="Partial Shade">Partial Shade</option>
+                                    <option value="Full Shade">Full Shade</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Conservation Status -->
+                    <div class="bg-red-50 rounded-lg p-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4">⚠️ Conservation Status</h4>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Conservation Status</label>
+                                <select id="conservationStatus" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500">
+                                    <option value="">Select Status</option>
+                                    <option value="Least Concern">Least Concern</option>
+                                    <option value="Near Threatened">Near Threatened</option>
+                                    <option value="Vulnerable">Vulnerable</option>
+                                    <option value="Endangered">Endangered</option>
+                                    <option value="Critically Endangered">Critically Endangered</option>
+                                    <option value="Data Deficient">Data Deficient</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Endemic Status</label>
+                                <select id="endemicStatus" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500">
+                                    <option value="No">Not Endemic</option>
+                                    <option value="Regional">Regional Endemic</option>
+                                    <option value="National">National Endemic</option>
+                                    <option value="Local">Local Endemic</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4">📝 Description</h4>
+                        <textarea id="description" rows="4" 
+                                  class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500" 
+                                  placeholder="Describe the species characteristics, habitat, ecological importance, and any other relevant information..."></textarea>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="flex justify-end gap-4 pt-6 border-t">
+                        <button type="button" onclick="closeModal()" 
+                                class="bg-gray-500 hover:bg-gray-600 text-white px-8 py-3 rounded-lg font-medium transition-colors">
+                            Cancel
+                        </button>
+                        <button type="submit" 
+                                class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-medium transition-colors shadow-lg">
+                            💾 Save Species
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" class="fixed inset-0 modal-overlay hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
+                <div class="bg-red-600 text-white p-6 rounded-t-xl">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-2xl font-bold">🔐 Admin Login</h3>
+                        <button onclick="closeAdminLogin()" class="text-white hover:text-gray-200 text-3xl transition-colors">×</button>
+                    </div>
+                </div>
+                
+                <form id="adminLoginForm" class="p-6 space-y-6">
+                    <div class="text-center mb-6">
+                        <div class="text-6xl mb-4">🛡️</div>
+                        <p class="text-gray-600">Enter admin credentials to access content management features</p>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                        <input type="text" id="adminUsername" required 
+                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-red-500"
+                               placeholder="Enter admin username">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <input type="password" id="adminPassword" required 
+                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-red-500"
+                               placeholder="Enter admin password">
+                    </div>
+                    
+                    <div id="loginError" class="hidden bg-red-50 border border-red-200 rounded-lg p-3">
+                        <p class="text-red-700 text-sm">❌ Invalid credentials. Please try again.</p>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <button type="button" onclick="closeAdminLogin()" 
+                                class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-lg font-medium transition-colors">
+                            Cancel
+                        </button>
+                        <button type="submit" 
+                                class="flex-1 bg-red-600 hover:bg-red-700 text-white py-3 px-6 rounded-lg font-medium transition-colors shadow-lg">
+                            🔓 Login
+                        </button>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p class="text-xs text-gray-500">
+                            Demo credentials: admin / rimbun2024
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden file input for import -->
+    <input type="file" id="importFile" accept=".json" style="display: none;" onchange="handleImport(event)">
+
+    <script>
+        // Global variables
+        let speciesDatabase = [];
+        let filteredSpecies = [];
+        let editingSpeciesId = null;
+        let isAdminLoggedIn = false;
+        const ADMIN_PASSWORD = 'rimbun2024'; // Change this to your desired password
+        
+        // Website content database
+        let websiteContent = {
+            companyName: "🌿 Rimbun Landscape",
+            tagline: "Sustainable Landscaping & Biodiversity Conservation",
+            heroTitle: "Transform Your Space Into Paradise",
+            heroDescription: "Create stunning, eco-friendly landscapes with Indonesia's most beautiful native plants. Our expert team designs sustainable outdoor spaces that increase property value while supporting local wildlife and reducing maintenance costs.",
+            heroButtonText: "Get Free Consultation",
+            heroSecondaryButtonText: "View Our Work",
+            mission: "To transform Indonesia's landscapes through sustainable design practices that celebrate native biodiversity while creating beautiful, functional outdoor spaces. We believe that landscaping should work in harmony with nature, not against it.",
+            missionExtended: "By using indigenous plants and sustainable practices, we help our clients create landscapes that are not only stunning but also environmentally responsible and economically viable for the long term.",
+            founded: "2020",
+            teamSize: "15+",
+            awards: "5+",
+            contactInfo: {
+                address: "Jl. Raya Bogor No. 123\nJakarta Selatan 12345\nIndonesia",
+                phone: "+62 858 1131 8500",
+                whatsapp: "+62 858 1131 8500",
+                email: "info@rimbunlandscape.com",
+                instagram: "@rimbunlandscape",
+                hours: "Monday - Friday: 8:00 AM - 6:00 PM\nSaturday: 8:00 AM - 4:00 PM\nSunday: Closed"
+            },
+            links: {
+                whatsappUrl: "https://wa.me/6285811318500",
+                instagramUrl: "https://instagram.com/rimbunlandscape",
+                scheduleUrl: "https://wa.me/6285811318500?text=Hi! I'd like to schedule a free consultation for my landscaping project.",
+                portfolioUrl: "#projects"
+            },
+            services: {
+                title: "Professional Landscaping Services",
+                subtitle: "Expert solutions using native Indonesian plants for sustainable, beautiful outdoor spaces",
+                items: [
+                    {
+                        id: "native-landscaping",
+                        icon: "🌱",
+                        title: "Native Plant Landscaping",
+                        description: "Design and installation of landscapes using indigenous Indonesian plants that thrive in local conditions and support native wildlife.",
+                        features: ["Site assessment and soil analysis", "Custom landscape design", "Native plant selection", "Professional installation"],
+                        price: "Starting from Rp 15,000,000",
+                        duration: "2-4 weeks"
+                    },
+                    {
+                        id: "garden-restoration",
+                        icon: "🌿",
+                        title: "Garden Restoration",
+                        description: "Transform existing gardens into thriving ecosystems using sustainable practices and native species for long-term environmental benefits.",
+                        features: ["Ecosystem assessment", "Invasive species removal", "Soil rehabilitation", "Native species reintroduction"],
+                        price: "Starting from Rp 12,000,000",
+                        duration: "3-6 weeks"
+                    },
+                    {
+                        id: "urban-forestry",
+                        icon: "🌳",
+                        title: "Urban Forestry",
+                        description: "Create urban green spaces that improve air quality, reduce heat islands, and provide habitat for urban wildlife using native tree species.",
+                        features: ["Urban canopy planning", "Native tree selection", "Planting and establishment", "Long-term maintenance"],
+                        price: "Starting from Rp 25,000,000",
+                        duration: "4-8 weeks"
+                    },
+                    {
+                        id: "water-wise",
+                        icon: "💧",
+                        title: "Water-Wise Gardens",
+                        description: "Design drought-resistant landscapes using native plants adapted to local rainfall patterns, reducing water consumption and maintenance needs.",
+                        features: ["Drought-tolerant plant selection", "Efficient irrigation systems", "Rainwater harvesting", "Mulching and soil conservation"],
+                        price: "Starting from Rp 18,000,000",
+                        duration: "3-5 weeks"
+                    },
+                    {
+                        id: "wildlife-gardens",
+                        icon: "🦋",
+                        title: "Wildlife Gardens",
+                        description: "Create habitats that attract and support local wildlife including birds, butterflies, and beneficial insects through strategic native plant placement.",
+                        features: ["Wildlife habitat design", "Pollinator-friendly plants", "Bird-attracting species", "Natural pest control"],
+                        price: "Starting from Rp 20,000,000",
+                        duration: "4-6 weeks"
+                    },
+                    {
+                        id: "commercial",
+                        icon: "🏢",
+                        title: "Commercial Landscaping",
+                        description: "Professional landscaping services for businesses, schools, and public spaces using sustainable practices and low-maintenance native plants.",
+                        features: ["Commercial site planning", "Low-maintenance designs", "Seasonal interest plants", "Ongoing maintenance programs"],
+                        price: "Custom Quote",
+                        duration: "6-12 weeks"
+                    }
+                ]
+            },
+            projects: {
+                title: "Our Success Stories",
+                subtitle: "Showcasing our award-winning landscaping projects across Indonesia using native plants and sustainable practices",
+                items: [
+                    {
+                        id: "jakarta-corporate",
+                        title: "Jakarta Corporate Campus",
+                        location: "Jakarta",
+                        size: "5 hectares",
+                        completed: "2023",
+                        category: "Commercial",
+                        image: "🏢",
+                        description: "Transformed a 5-hectare corporate campus using native Indonesian trees and drought-resistant plants, creating a green oasis in the urban environment.",
+                        tags: ["Urban Forestry", "Water-Wise", "Commercial"],
+                        results: ["40% reduction in irrigation needs", "Increased employee satisfaction by 65%", "Carbon sequestration: 50 tons/year"]
+                    },
+                    {
+                        id: "bali-resort",
+                        title: "Bali Resort Garden",
+                        location: "Ubud, Bali",
+                        size: "2 hectares",
+                        completed: "2023",
+                        category: "Resort",
+                        image: "🏠",
+                        description: "Created a tropical paradise using endemic Balinese plants, featuring traditional terraced gardens and natural water features that blend with the landscape.",
+                        tags: ["Native Plants", "Resort", "Water Features"],
+                        results: ["95% guest satisfaction rating", "Featured in 3 international magazines", "Zero chemical pesticide use"]
+                    },
+                    {
+                        id: "surabaya-school",
+                        title: "Surabaya School Garden",
+                        location: "Surabaya",
+                        size: "1 hectare",
+                        completed: "2024",
+                        category: "Educational",
+                        image: "🏫",
+                        description: "Educational garden project featuring native East Java plants, creating outdoor classrooms and teaching students about local biodiversity.",
+                        tags: ["Educational", "Wildlife Garden", "Community"],
+                        results: ["500+ students educated annually", "30 native species introduced", "Award: Best Educational Project 2024"]
+                    }
+                ]
+            },
+            conservation: {
+                title: "Conservation & Sustainability",
+                subtitle: "Our commitment to protecting Indonesia's natural heritage through sustainable landscaping practices",
+                mission: "We believe that beautiful landscapes and environmental conservation go hand in hand. Every project we undertake contributes to biodiversity preservation and ecosystem restoration.",
+                initiatives: [
+                    {
+                        id: "habitat-protection",
+                        icon: "🌳",
+                        title: "Habitat Protection",
+                        description: "Preserving natural habitats and establishing protected areas through strategic landscaping projects."
+                    },
+                    {
+                        id: "research-monitoring",
+                        icon: "🔬",
+                        title: "Research & Monitoring",
+                        description: "Studying species ecology and population dynamics to inform our conservation strategies."
+                    },
+                    {
+                        id: "community-engagement",
+                        icon: "👥",
+                        title: "Community Engagement",
+                        description: "Involving local communities in conservation efforts through education and sustainable employment."
+                    }
+                ],
+                impact: {
+                    speciesProtected: "200+",
+                    habitatRestored: "50+ hectares",
+                    carbonSequestered: "500+ tons",
+                    communitiesEngaged: "25+"
+                }
+            },
+            about: {
+                title: "About Rimbun Landscape",
+                subtitle: "Indonesia's leading sustainable landscaping company, transforming outdoor spaces with native plants since 2020",
+                story: "Founded by a team of passionate landscape architects and conservation biologists, Rimbun Landscape was born from a simple belief: that beautiful outdoor spaces should enhance, not harm, the natural environment. We specialize in creating stunning landscapes using Indonesia's incredible native plant diversity.",
+                mission: "To transform Indonesia's landscapes through sustainable design practices that celebrate native biodiversity while creating beautiful, functional outdoor spaces. We believe that landscaping should work in harmony with nature, not against it.",
+                vision: "To be Indonesia's most trusted partner for sustainable landscaping, leading the way in native plant conservation and eco-friendly design practices.",
+                values: [
+                    {
+                        icon: "🌱",
+                        title: "Sustainability First",
+                        description: "Every decision we make prioritizes long-term environmental health and sustainability."
+                    },
+                    {
+                        icon: "🎨",
+                        title: "Design Excellence",
+                        description: "We create visually stunning landscapes that exceed our clients' expectations."
+                    },
+                    {
+                        icon: "🤝",
+                        title: "Client Partnership",
+                        description: "We work closely with clients to understand their vision and bring it to life."
+                    },
+                    {
+                        icon: "🔬",
+                        title: "Scientific Approach",
+                        description: "Our designs are based on ecological science and proven horticultural practices."
+                    }
+                ],
+                team: {
+                    founded: "2020",
+                    teamSize: "15+ Experts",
+                    awards: "5+ Industry Awards",
+                    projects: "50+ Completed Projects"
+                },
+                certifications: [
+                    "Certified Landscape Architects",
+                    "Native Plant Society Members",
+                    "Sustainable Design Specialists",
+                    "Conservation Biology Experts"
+                ]
+            }
+        };
+
+        // Load website content from localStorage
+        function loadWebsiteContent() {
+            const stored = localStorage.getItem('rimbunWebsiteContent');
+            if (stored) {
+                try {
+                    websiteContent = { ...websiteContent, ...JSON.parse(stored) };
+                } catch (error) {
+                    console.error('Error loading website content:', error);
+                }
+            }
+            updateWebsiteContent();
+        }
+
+        // Save website content to localStorage
+        function saveWebsiteContent() {
+            localStorage.setItem('rimbunWebsiteContent', JSON.stringify(websiteContent));
+        }
+
+        // Update website content in DOM
+        function updateWebsiteContent() {
+            // Update header
+            const logoElement = document.querySelector('h1');
+            if (logoElement) logoElement.textContent = websiteContent.companyName;
+            
+            const taglineElement = document.querySelector('header p');
+            if (taglineElement) taglineElement.textContent = websiteContent.tagline;
+            
+            // Update hero section
+            const heroTitle = document.getElementById('heroTitle');
+            if (heroTitle) heroTitle.textContent = websiteContent.heroTitle;
+            
+            const heroDesc = document.getElementById('heroDescription');
+            if (heroDesc) heroDesc.textContent = websiteContent.heroDescription;
+            
+            const heroButton = document.getElementById('heroButton');
+            if (heroButton) heroButton.innerHTML = `📞 ${websiteContent.heroButtonText}`;
+            
+            const heroSecondaryButton = document.getElementById('heroSecondaryButton');
+            if (heroSecondaryButton) heroSecondaryButton.innerHTML = `🏆 ${websiteContent.heroSecondaryButtonText}`;
+            
+            // Update contact info
+            updateContactInfo();
+            
+            // Re-render dynamic content
+            renderServicesContent();
+            renderProjectsContent();
+            renderConservationContent();
+            renderAboutContent();
+        }
+
+        // Update contact information
+        function updateContactInfo() {
+            // Find contact elements by their structure
+            const contactElements = document.querySelectorAll('#contact .flex.items-center');
+            
+            contactElements.forEach(element => {
+                const iconDiv = element.querySelector('.text-2xl');
+                const textDiv = element.querySelector('div:last-child p');
+                
+                if (iconDiv && textDiv) {
+                    const icon = iconDiv.textContent.trim();
+                    switch(icon) {
+                        case '📍':
+                            textDiv.innerHTML = websiteContent.contactInfo.address.replace(/\n/g, '<br>');
+                            break;
+                        case '📞':
+                            textDiv.textContent = websiteContent.contactInfo.phone;
+                            break;
+                        case '📱':
+                            textDiv.textContent = websiteContent.contactInfo.whatsapp;
+                            break;
+                        case '📧':
+                            textDiv.textContent = websiteContent.contactInfo.email;
+                            break;
+                        case '📸':
+                            textDiv.textContent = websiteContent.contactInfo.instagram;
+                            break;
+                        case '🕒':
+                            textDiv.innerHTML = websiteContent.contactInfo.hours.replace(/\n/g, '<br>');
+                            break;
+                    }
+                }
+            });
+        }
+
+        // Render services content
+        function renderServicesContent() {
+            const servicesTitle = document.getElementById('servicesTitle');
+            const servicesSubtitle = document.getElementById('servicesSubtitle');
+            const servicesGrid = document.getElementById('servicesGrid');
+            
+            if (servicesTitle) servicesTitle.textContent = `🌳 ${websiteContent.services.title}`;
+            if (servicesSubtitle) servicesSubtitle.textContent = websiteContent.services.subtitle;
+            
+            if (servicesGrid) {
+                servicesGrid.innerHTML = '';
+                websiteContent.services.items.forEach(service => {
+                    const serviceCard = document.createElement('div');
+                    serviceCard.className = 'bg-white rounded-xl shadow-lg p-8 text-center hover:shadow-xl transition-all transform hover:-translate-y-1';
+                    serviceCard.innerHTML = `
+                        <div class="text-6xl mb-4">${service.icon}</div>
+                        <h3 class="text-2xl font-bold text-green-800 mb-4">${service.title}</h3>
+                        <p class="text-gray-600 mb-6">${service.description}</p>
+                        <ul class="text-sm text-gray-700 space-y-2 mb-6">
+                            ${service.features.map(feature => `<li>✓ ${feature}</li>`).join('')}
+                        </ul>
+                        <div class="bg-green-50 rounded-lg p-4 mb-6">
+                            <p class="text-green-800 font-bold text-lg">${service.price}</p>
+                            <p class="text-green-600 text-sm">Duration: ${service.duration}</p>
+                        </div>
+                        <button onclick="openWhatsApp('consultation')" class="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-3 px-6 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                            💬 Get Quote
+                        </button>
+                    `;
+                    servicesGrid.appendChild(serviceCard);
+                });
+            }
+        }
+
+        // Render projects content
+        function renderProjectsContent() {
+            const projectsTitle = document.getElementById('projectsTitle');
+            const projectsSubtitle = document.getElementById('projectsSubtitle');
+            const projectsGrid = document.getElementById('projectsGrid');
+            
+            if (projectsTitle) projectsTitle.textContent = `🏗️ ${websiteContent.projects.title}`;
+            if (projectsSubtitle) projectsSubtitle.textContent = websiteContent.projects.subtitle;
+            
+            if (projectsGrid) {
+                projectsGrid.innerHTML = '';
+                websiteContent.projects.items.forEach(project => {
+                    const projectCard = document.createElement('div');
+                    projectCard.className = 'bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all transform hover:-translate-y-1';
+                    projectCard.innerHTML = `
+                        <div class="h-48 bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
+                            <div class="text-6xl">${project.image}</div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">${project.title}</h3>
+                            <p class="text-gray-600 mb-4">${project.description}</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                ${project.tags.map(tag => `<span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">${tag}</span>`).join('')}
+                            </div>
+                            <div class="text-sm text-gray-500 mb-4">
+                                <p><strong>Location:</strong> ${project.location}</p>
+                                <p><strong>Size:</strong> ${project.size}</p>
+                                <p><strong>Completed:</strong> ${project.completed}</p>
+                            </div>
+                            <div class="bg-blue-50 rounded-lg p-3">
+                                <h4 class="font-bold text-blue-800 text-sm mb-2">Results:</h4>
+                                <ul class="text-xs text-blue-700 space-y-1">
+                                    ${project.results.map(result => `<li>• ${result}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                    projectsGrid.appendChild(projectCard);
+                });
+            }
+        }
+
+        // Render conservation content
+        function renderConservationContent() {
+            const conservationTitle = document.getElementById('conservationTitle');
+            const conservationSubtitle = document.getElementById('conservationSubtitle');
+            const conservationMission = document.getElementById('conservationMission');
+            const conservationInitiatives = document.getElementById('conservationInitiatives');
+            const conservationImpact = document.getElementById('conservationImpact');
+            
+            if (conservationTitle) conservationTitle.textContent = `🛡️ ${websiteContent.conservation.title}`;
+            if (conservationSubtitle) conservationSubtitle.textContent = websiteContent.conservation.subtitle;
+            if (conservationMission) conservationMission.textContent = websiteContent.conservation.mission;
+            
+            if (conservationInitiatives) {
+                conservationInitiatives.innerHTML = '';
+                websiteContent.conservation.initiatives.forEach(initiative => {
+                    const initiativeCard = document.createElement('div');
+                    initiativeCard.className = 'text-center p-6 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors';
+                    initiativeCard.innerHTML = `
+                        <div class="text-4xl mb-4">${initiative.icon}</div>
+                        <h4 class="text-lg font-bold text-gray-800 mb-2">${initiative.title}</h4>
+                        <p class="text-gray-600">${initiative.description}</p>
+                    `;
+                    conservationInitiatives.appendChild(initiativeCard);
+                });
+            }
+            
+            if (conservationImpact) {
+                conservationImpact.innerHTML = `
+                    <div>
+                        <div class="text-4xl font-bold mb-2">${websiteContent.conservation.impact.speciesProtected}</div>
+                        <p class="font-medium">Species Protected</p>
+                    </div>
+                    <div>
+                        <div class="text-4xl font-bold mb-2">${websiteContent.conservation.impact.habitatRestored}</div>
+                        <p class="font-medium">Habitat Restored</p>
+                    </div>
+                    <div>
+                        <div class="text-4xl font-bold mb-2">${websiteContent.conservation.impact.carbonSequestered}</div>
+                        <p class="font-medium">Carbon Sequestered</p>
+                    </div>
+                    <div>
+                        <div class="text-4xl font-bold mb-2">${websiteContent.conservation.impact.communitiesEngaged}</div>
+                        <p class="font-medium">Communities Engaged</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Render about content
+        function renderAboutContent() {
+            const aboutTitle = document.getElementById('aboutTitle');
+            const aboutSubtitle = document.getElementById('aboutSubtitle');
+            const aboutStory = document.getElementById('aboutStory');
+            const aboutMission = document.getElementById('aboutMission');
+            const aboutVision = document.getElementById('aboutVision');
+            const aboutValues = document.getElementById('aboutValues');
+            const aboutFounded = document.getElementById('aboutFounded');
+            const aboutTeamSize = document.getElementById('aboutTeamSize');
+            const aboutAwards = document.getElementById('aboutAwards');
+            const aboutProjects = document.getElementById('aboutProjects');
+            const aboutCertifications = document.getElementById('aboutCertifications');
+            
+            if (aboutTitle) aboutTitle.textContent = `ℹ️ ${websiteContent.about.title}`;
+            if (aboutSubtitle) aboutSubtitle.textContent = websiteContent.about.subtitle;
+            if (aboutStory) aboutStory.textContent = websiteContent.about.story;
+            if (aboutMission) aboutMission.textContent = websiteContent.about.mission;
+            if (aboutVision) aboutVision.textContent = websiteContent.about.vision;
+            if (aboutFounded) aboutFounded.textContent = websiteContent.about.team.founded;
+            if (aboutTeamSize) aboutTeamSize.textContent = websiteContent.about.team.teamSize;
+            if (aboutAwards) aboutAwards.textContent = websiteContent.about.team.awards;
+            if (aboutProjects) aboutProjects.textContent = websiteContent.about.team.projects;
+            
+            if (aboutValues) {
+                aboutValues.innerHTML = '';
+                websiteContent.about.values.forEach(value => {
+                    const valueDiv = document.createElement('div');
+                    valueDiv.className = 'flex items-start p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors';
+                    valueDiv.innerHTML = `
+                        <div class="text-3xl mr-4">${value.icon}</div>
+                        <div>
+                            <h4 class="font-bold text-gray-800 mb-2">${value.title}</h4>
+                            <p class="text-gray-600 text-sm">${value.description}</p>
+                        </div>
+                    `;
+                    aboutValues.appendChild(valueDiv);
+                });
+            }
+            
+            if (aboutCertifications) {
+                aboutCertifications.innerHTML = '';
+                websiteContent.about.certifications.forEach(cert => {
+                    const certDiv = document.createElement('div');
+                    certDiv.className = 'bg-green-50 border border-green-200 rounded-lg p-4 text-center';
+                    certDiv.innerHTML = `
+                        <div class="text-2xl mb-2">🎓</div>
+                        <p class="text-green-800 font-medium text-sm">${cert}</p>
+                    `;
+                    aboutCertifications.appendChild(certDiv);
+                });
+            }
+        }
+
+        // Make content editable for admin
+        function makeContentEditable() {
+            if (!isAdminLoggedIn) return;
+            
+            // Add edit buttons to editable content
+            addEditButton('h1', 'Edit Company Name', () => editContent('companyName', 'Company Name'));
+            addEditButton('header p', 'Edit Tagline', () => editContent('tagline', 'Tagline'));
+            addEditButton('#home h2', 'Edit Hero Title', () => editContent('heroTitle', 'Hero Title'));
+            addEditButton('#home .text-xl', 'Edit Hero Description', () => editContent('heroDescription', 'Hero Description', true));
+            
+            // Add content management button to admin controls
+            const adminControls = document.getElementById('adminSpeciesControls');
+            if (adminControls && !document.getElementById('contentEditButton')) {
+                const contentButton = document.createElement('button');
+                contentButton.id = 'contentEditButton';
+                contentButton.onclick = openContentEditor;
+                contentButton.className = 'bg-orange-600 hover:bg-orange-700 text-white px-4 py-3 rounded-lg font-medium transition-colors shadow-lg';
+                contentButton.innerHTML = '✏️ Edit Website Content';
+                adminControls.querySelector('.flex').appendChild(contentButton);
+            }
+        }
+
+        // Add edit button to element
+        function addEditButton(selector, title, onClick) {
+            const element = document.querySelector(selector);
+            if (element && !element.querySelector('.admin-edit-btn')) {
+                const editBtn = document.createElement('button');
+                editBtn.className = 'admin-edit-btn ml-2 bg-orange-500 hover:bg-orange-600 text-white px-2 py-1 rounded text-xs transition-colors';
+                editBtn.title = title;
+                editBtn.innerHTML = '✏️';
+                editBtn.onclick = onClick;
+                element.style.position = 'relative';
+                element.appendChild(editBtn);
+            }
+        }
+
+        // Remove edit buttons
+        function removeEditButtons() {
+            document.querySelectorAll('.admin-edit-btn').forEach(btn => btn.remove());
+            const contentButton = document.getElementById('contentEditButton');
+            if (contentButton) contentButton.remove();
+        }
+
+        // Edit content inline
+        function editContent(key, label, isTextarea = false) {
+            const currentValue = key.includes('.') ? 
+                key.split('.').reduce((obj, k) => obj[k], websiteContent) : 
+                websiteContent[key];
+            
+            const newValue = isTextarea ? 
+                prompt(`Edit ${label}:`, currentValue) : 
+                prompt(`Edit ${label}:`, currentValue);
+            
+            if (newValue !== null && newValue !== currentValue) {
+                if (key.includes('.')) {
+                    const keys = key.split('.');
+                    let obj = websiteContent;
+                    for (let i = 0; i < keys.length - 1; i++) {
+                        obj = obj[keys[i]];
+                    }
+                    obj[keys[keys.length - 1]] = newValue;
+                } else {
+                    websiteContent[key] = newValue;
+                }
+                saveWebsiteContent();
+                updateWebsiteContent();
+            }
+        }
+
+        // Open content editor modal
+        function openContentEditor() {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 modal-overlay z-50';
+            modal.innerHTML = `
+                <div class="flex items-center justify-center min-h-screen p-4">
+                    <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+                        <div class="bg-orange-600 text-white p-6 rounded-t-xl">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-2xl font-bold">✏️ Edit Website Content</h3>
+                                <button onclick="this.closest('.modal-overlay').remove()" class="text-white hover:text-gray-200 text-3xl transition-colors">×</button>
+                            </div>
+                        </div>
+                        
+                        <form id="contentForm" class="p-6 space-y-6">
+                            <div class="bg-blue-50 rounded-lg p-6">
+                                <h4 class="text-lg font-bold text-gray-800 mb-4">🏢 Company Information</h4>
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Company Name</label>
+                                        <input type="text" id="companyName" value="${websiteContent.companyName}" 
+                                               class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Tagline</label>
+                                        <input type="text" id="tagline" value="${websiteContent.tagline}" 
+                                               class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-green-50 rounded-lg p-6">
+                                <h4 class="text-lg font-bold text-gray-800 mb-4">🏠 Homepage Content</h4>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Hero Title</label>
+                                        <input type="text" id="heroTitle" value="${websiteContent.heroTitle}" 
+                                               class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Hero Description</label>
+                                        <textarea id="heroDescription" rows="3" 
+                                                  class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500">${websiteContent.heroDescription}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-purple-50 rounded-lg p-6">
+                                <h4 class="text-lg font-bold text-gray-800 mb-4">ℹ️ About Section</h4>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Mission Statement</label>
+                                        <textarea id="mission" rows="3" 
+                                                  class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500">${websiteContent.mission}</textarea>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Extended Mission</label>
+                                        <textarea id="missionExtended" rows="3" 
+                                                  class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500">${websiteContent.missionExtended}</textarea>
+                                    </div>
+                                    <div class="grid md:grid-cols-3 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Founded Year</label>
+                                            <input type="text" id="founded" value="${websiteContent.founded}" 
+                                                   class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Team Size</label>
+                                            <input type="text" id="teamSize" value="${websiteContent.teamSize}" 
+                                                   class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Awards</label>
+                                            <input type="text" id="awards" value="${websiteContent.awards}" 
+                                                   class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-cyan-50 rounded-lg p-6">
+                                <h4 class="text-lg font-bold text-gray-800 mb-4">📞 Contact Information</h4>
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                                        <textarea id="address" rows="3" 
+                                                  class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500">${websiteContent.contactInfo.address}</textarea>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Business Hours</label>
+                                        <textarea id="hours" rows="3" 
+                                                  class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500">${websiteContent.contactInfo.hours}</textarea>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                                        <input type="text" id="phone" value="${websiteContent.contactInfo.phone}" 
+                                               class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">WhatsApp</label>
+                                        <input type="text" id="whatsapp" value="${websiteContent.contactInfo.whatsapp}" 
+                                               class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500">
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                        <input type="email" id="email" value="${websiteContent.contactInfo.email}" 
+                                               class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end gap-4 pt-6 border-t">
+                                <button type="button" onclick="this.closest('.modal-overlay').remove()" 
+                                        class="bg-gray-500 hover:bg-gray-600 text-white px-8 py-3 rounded-lg font-medium transition-colors">
+                                    Cancel
+                                </button>
+                                <button type="submit" 
+                                        class="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3 rounded-lg font-medium transition-colors shadow-lg">
+                                    💾 Save Changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Handle form submission
+            document.getElementById('contentForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Update website content
+                websiteContent.companyName = document.getElementById('companyName').value;
+                websiteContent.tagline = document.getElementById('tagline').value;
+                websiteContent.heroTitle = document.getElementById('heroTitle').value;
+                websiteContent.heroDescription = document.getElementById('heroDescription').value;
+                websiteContent.mission = document.getElementById('mission').value;
+                websiteContent.missionExtended = document.getElementById('missionExtended').value;
+                websiteContent.founded = document.getElementById('founded').value;
+                websiteContent.teamSize = document.getElementById('teamSize').value;
+                websiteContent.awards = document.getElementById('awards').value;
+                
+                websiteContent.contactInfo.address = document.getElementById('address').value;
+                websiteContent.contactInfo.phone = document.getElementById('phone').value;
+                websiteContent.contactInfo.whatsapp = document.getElementById('whatsapp').value;
+                websiteContent.contactInfo.email = document.getElementById('email').value;
+                websiteContent.contactInfo.hours = document.getElementById('hours').value;
+                
+                saveWebsiteContent();
+                updateWebsiteContent();
+                modal.remove();
+                alert('Website content updated successfully!');
+            });
+        }
+
+        // Initialize default species data
+        function initializeDefaultSpecies() {
+            const defaultSpecies = [
+                {
+                    id: 'tectona-grandis',
+                    scientificName: 'Tectona grandis',
+                    commonName: 'Teak',
+                    localName: 'Jati',
+                    family: 'Lamiaceae',
+                    category: 'Canopy Tree',
+                    region: 'Java',
+                    image: '🌳',
+                    maxHeight: 40,
+                    maxDiameter: 150,
+                    growthRate: 'Medium',
+                    uses: ['Timber', 'Shade', 'Carbon Storage'],
+                    soilType: 'Loamy',
+                    waterReq: 'Medium',
+                    lightReq: 'Full Sun',
+                    conservationStatus: 'Near Threatened',
+                    endemicStatus: 'No',
+                    description: 'Premium hardwood tree native to Southeast Asia, highly valued for furniture and construction. Known for its durability and resistance to termites.'
+                },
+                {
+                    id: 'shorea-leprosula',
+                    scientificName: 'Shorea leprosula',
+                    commonName: 'Meranti',
+                    localName: 'Meranti Merah',
+                    family: 'Dipterocarpaceae',
+                    category: 'Canopy Tree',
+                    region: 'Sumatra',
+                    image: '🌲',
+                    maxHeight: 60,
+                    maxDiameter: 200,
+                    growthRate: 'Fast',
+                    uses: ['Timber', 'Wildlife Food', 'Carbon Storage'],
+                    soilType: 'Clay',
+                    waterReq: 'High',
+                    lightReq: 'Full Sun',
+                    conservationStatus: 'Vulnerable',
+                    endemicStatus: 'Regional',
+                    description: 'Tall rainforest tree, important for timber and ecosystem services. Critical habitat for many wildlife species.'
+                },
+                {
+                    id: 'durio-zibethinus',
+                    scientificName: 'Durio zibethinus',
+                    commonName: 'Durian',
+                    localName: 'Durian',
+                    family: 'Malvaceae',
+                    category: 'Understory Tree',
+                    region: 'Kalimantan',
+                    image: '🌿',
+                    maxHeight: 25,
+                    maxDiameter: 80,
+                    growthRate: 'Medium',
+                    uses: ['Fruit', 'Wildlife Food', 'Shade'],
+                    soilType: 'Loamy',
+                    waterReq: 'High',
+                    lightReq: 'Partial Sun',
+                    conservationStatus: 'Least Concern',
+                    endemicStatus: 'Regional',
+                    description: 'King of fruits, provides food for humans and wildlife. Important economic crop in Southeast Asia.'
+                },
+                {
+                    id: 'rafflesia-arnoldii',
+                    scientificName: 'Rafflesia arnoldii',
+                    commonName: 'Corpse Flower',
+                    localName: 'Bunga Bangkai',
+                    family: 'Rafflesiaceae',
+                    category: 'Ground Cover',
+                    region: 'Sumatra',
+                    image: '🌺',
+                    maxHeight: 0.1,
+                    maxDiameter: 100,
+                    growthRate: 'Slow',
+                    uses: ['Ornamental', 'Wildlife Food'],
+                    soilType: 'Loamy',
+                    waterReq: 'High',
+                    lightReq: 'Partial Shade',
+                    conservationStatus: 'Endangered',
+                    endemicStatus: 'National',
+                    description: 'World\'s largest flower, parasitic plant that produces massive blooms with distinctive odor to attract pollinators.'
+                },
+                {
+                    id: 'pinus-merkusii',
+                    scientificName: 'Pinus merkusii',
+                    commonName: 'Merkus Pine',
+                    localName: 'Pinus Sumatera',
+                    family: 'Pinaceae',
+                    category: 'Canopy Tree',
+                    region: 'Sumatra',
+                    image: '🌲',
+                    maxHeight: 45,
+                    maxDiameter: 120,
+                    growthRate: 'Fast',
+                    uses: ['Timber', 'Erosion Control', 'Carbon Storage'],
+                    soilType: 'Sandy',
+                    waterReq: 'Medium',
+                    lightReq: 'Full Sun',
+                    conservationStatus: 'Least Concern',
+                    endemicStatus: 'Regional',
+                    description: 'Only pine species native to Indonesia, important for reforestation and timber production in highland areas.'
+                }
+            ];
+
+            // Load from localStorage or use defaults
+            const stored = localStorage.getItem('indonesianSpeciesDB');
+            if (stored) {
+                try {
+                    speciesDatabase = JSON.parse(stored);
+                } catch (error) {
+                    console.error('Error loading database:', error);
+                    speciesDatabase = defaultSpecies;
+                }
+            } else {
+                speciesDatabase = defaultSpecies;
+                saveDatabase();
+            }
+        }
+
+        // Save database to localStorage
+        function saveDatabase() {
+            localStorage.setItem('indonesianSpeciesDB', JSON.stringify(speciesDatabase));
+        }
+
+        // Show database section with admin check
+        function showDatabaseSection() {
+            if (checkAdminLogin()) {
+                showSection('database');
+            }
+        }
+
+        // Show section
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all nav buttons
+            document.querySelectorAll('.nav-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionName).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            // Update content based on section
+            if (sectionName === 'home') {
+                updateHomeStats();
+                renderFeaturedSpecies();
+            } else if (sectionName === 'services') {
+                // Services section is static, no updates needed
+            } else if (sectionName === 'species') {
+                updateSpeciesFilters();
+                filterSpeciesDisplay();
+            } else if (sectionName === 'database') {
+                updateStats();
+                updateFilters();
+                filterSpecies();
+            } else if (sectionName === 'projects') {
+                // Projects section is static, no updates needed
+            } else if (sectionName === 'conservation') {
+                updateConservationStats();
+                renderPrioritySpecies();
+            } else if (sectionName === 'contact') {
+                // Contact section is static, no updates needed
+            }
+        }
+
+        // Admin login functions
+        function showAdminLogin() {
+            if (isAdminLoggedIn) {
+                alert('ℹ️ You are already logged in as admin.');
+                return;
+            }
+            document.getElementById('adminLoginModal').classList.remove('hidden');
+            document.getElementById('adminUsername').focus();
+        }
+
+        function closeAdminLogin() {
+            document.getElementById('adminLoginModal').classList.add('hidden');
+            document.getElementById('adminLoginForm').reset();
+            document.getElementById('loginError').classList.add('hidden');
+        }
+
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+            
+            // Check credentials (username: admin, password: rimbun2024)
+            if (username === 'admin' && password === ADMIN_PASSWORD) {
+                isAdminLoggedIn = true;
+                closeAdminLogin();
+                showAdminElements();
+                alert('✅ Admin access granted! You can now manage all website content and species data.');
+            } else {
+                document.getElementById('loginError').classList.remove('hidden');
+                document.getElementById('adminPassword').value = '';
+                document.getElementById('adminPassword').focus();
+            }
+        }
+
+        function showAdminElements() {
+            document.getElementById('adminButton').classList.remove('hidden');
+            document.getElementById('adminAccessBox').classList.remove('hidden');
+            document.getElementById('adminSpeciesControls').classList.remove('hidden');
+            document.getElementById('adminServicesControls').classList.remove('hidden');
+            document.getElementById('adminProjectsControls').classList.remove('hidden');
+            document.getElementById('adminConservationControls').classList.remove('hidden');
+            document.getElementById('adminAboutControls').classList.remove('hidden');
+            document.getElementById('adminContactControls').classList.remove('hidden');
+            makeContentEditable();
+            // Re-render species display to show admin controls
+            if (document.getElementById('species').classList.contains('active')) {
+                filterSpeciesDisplay();
+            }
+        }
+
+        function hideAdminElements() {
+            document.getElementById('adminButton').classList.add('hidden');
+            document.getElementById('adminAccessBox').classList.add('hidden');
+            document.getElementById('adminSpeciesControls').classList.add('hidden');
+            document.getElementById('adminServicesControls').classList.add('hidden');
+            document.getElementById('adminProjectsControls').classList.add('hidden');
+            document.getElementById('adminConservationControls').classList.add('hidden');
+            document.getElementById('adminAboutControls').classList.add('hidden');
+            document.getElementById('adminContactControls').classList.add('hidden');
+            removeEditButtons();
+            // Re-render species display to hide admin controls
+            if (document.getElementById('species').classList.contains('active')) {
+                filterSpeciesDisplay();
+            }
+        }
+
+        // Content editing functions
+        function editServicesContent() {
+            if (!isAdminLoggedIn) return;
+            
+            const modal = createContentModal('Services', websiteContent.services, [
+                { key: 'title', label: 'Services Title', type: 'text' },
+                { key: 'subtitle', label: 'Services Subtitle', type: 'textarea' }
+            ]);
+            
+            document.body.appendChild(modal);
+        }
+
+        function editProjectsContent() {
+            if (!isAdminLoggedIn) return;
+            
+            const modal = createContentModal('Projects', websiteContent.projects, [
+                { key: 'title', label: 'Projects Title', type: 'text' },
+                { key: 'subtitle', label: 'Projects Subtitle', type: 'textarea' }
+            ]);
+            
+            document.body.appendChild(modal);
+        }
+
+        function editConservationContent() {
+            if (!isAdminLoggedIn) return;
+            
+            const modal = createContentModal('Conservation', websiteContent.conservation, [
+                { key: 'title', label: 'Conservation Title', type: 'text' },
+                { key: 'subtitle', label: 'Conservation Subtitle', type: 'textarea' },
+                { key: 'mission', label: 'Conservation Mission', type: 'textarea' }
+            ]);
+            
+            document.body.appendChild(modal);
+        }
+
+        function editAboutContent() {
+            if (!isAdminLoggedIn) return;
+            
+            const modal = createContentModal('About', websiteContent.about, [
+                { key: 'title', label: 'About Title', type: 'text' },
+                { key: 'subtitle', label: 'About Subtitle', type: 'textarea' },
+                { key: 'story', label: 'Company Story', type: 'textarea' },
+                { key: 'mission', label: 'Mission Statement', type: 'textarea' },
+                { key: 'vision', label: 'Vision Statement', type: 'textarea' }
+            ]);
+            
+            document.body.appendChild(modal);
+        }
+
+        function editContactContent() {
+            if (!isAdminLoggedIn) return;
+            
+            const modal = createContentModal('Contact', { title: 'Contact Us', subtitle: 'Ready to transform your outdoor space with native Indonesian plants? Get in touch with our landscaping experts' }, [
+                { key: 'title', label: 'Contact Title', type: 'text' },
+                { key: 'subtitle', label: 'Contact Subtitle', type: 'textarea' }
+            ]);
+            
+            document.body.appendChild(modal);
+        }
+
+        function createContentModal(sectionName, content, fields) {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 modal-overlay z-50';
+            
+            const fieldsHtml = fields.map(field => {
+                const value = field.key.includes('.') ? 
+                    field.key.split('.').reduce((obj, k) => obj[k], content) : 
+                    content[field.key];
+                
+                if (field.type === 'textarea') {
+                    return `
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">${field.label}</label>
+                            <textarea id="${field.key}" rows="3" 
+                                      class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500">${value || ''}</textarea>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">${field.label}</label>
+                            <input type="text" id="${field.key}" value="${value || ''}" 
+                                   class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500">
+                        </div>
+                    `;
+                }
+            }).join('');
+            
+            modal.innerHTML = `
+                <div class="flex items-center justify-center min-h-screen p-4">
+                    <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl">
+                        <div class="bg-orange-600 text-white p-6 rounded-t-xl">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-2xl font-bold">✏️ Edit ${sectionName} Content</h3>
+                                <button onclick="this.closest('.modal-overlay').remove()" class="text-white hover:text-gray-200 text-3xl transition-colors">×</button>
+                            </div>
+                        </div>
+                        
+                        <form class="p-6 space-y-6">
+                            ${fieldsHtml}
+                            
+                            <div class="flex justify-end gap-4 pt-6 border-t">
+                                <button type="button" onclick="this.closest('.modal-overlay').remove()" 
+                                        class="bg-gray-500 hover:bg-gray-600 text-white px-8 py-3 rounded-lg font-medium transition-colors">
+                                    Cancel
+                                </button>
+                                <button type="submit" 
+                                        class="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3 rounded-lg font-medium transition-colors shadow-lg">
+                                    💾 Save Changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            
+            // Handle form submission
+            modal.querySelector('form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                fields.forEach(field => {
+                    const value = document.getElementById(field.key).value;
+                    if (field.key.includes('.')) {
+                        const keys = field.key.split('.');
+                        let obj = content;
+                        for (let i = 0; i < keys.length - 1; i++) {
+                            obj = obj[keys[i]];
+                        }
+                        obj[keys[keys.length - 1]] = value;
+                    } else {
+                        content[field.key] = value;
+                    }
+                });
+                
+                // Special handling for contact section
+                if (sectionName === 'Contact') {
+                    document.getElementById('contactTitle').textContent = `📞 ${content.title}`;
+                    document.getElementById('contactSubtitle').textContent = content.subtitle;
+                }
+                
+                saveWebsiteContent();
+                updateWebsiteContent();
+                modal.remove();
+                alert(`${sectionName} content updated successfully!`);
+            });
+            
+            return modal;
+        }
+
+
+
+        function checkAdminLogin() {
+            if (!isAdminLoggedIn) {
+                const password = prompt('🔐 Admin Access Required\n\nPlease enter the admin password to access database management:');
+                if (password === ADMIN_PASSWORD) {
+                    isAdminLoggedIn = true;
+                    showAdminElements();
+                    alert('✅ Admin access granted! You can now manage the species database.');
+                    return true;
+                } else if (password !== null) {
+                    alert('❌ Incorrect password. Access denied.');
+                }
+                return false;
+            }
+            return true;
+        }
+
+        function adminLogout() {
+            isAdminLoggedIn = false;
+            hideAdminElements();
+            alert('🔓 Admin logged out successfully.');
+            showSection('home');
+        }
+
+        // WhatsApp and Instagram functions
+        function openWhatsApp(type) {
+            let message = '';
+            switch(type) {
+                case 'schedule':
+                    message = "Hi! Saya mau menjadwalkan konsultasi gratis.Bagaimana ya prosedurnya?";
+                    break;
+                case 'consultation':
+                    message = "Halo! saya tertarik  konsultasi dengan ahlinya mengenai taman/lanskap dan tanaman";
+                    break;
+                case 'project':
+                    message = "Hi! Saya ingin melakukan project yang terkait di website, bisa kah saya dikusi lebih lanjut? Nama saya";
+                    break;
+                case 'conservation':
+                    message = "Hello! I'm interested in partnering with you on conservation initiatives.";
+                    break;
+                case 'about':
+                    message = "Hi, saya ingin mengetahui jasa yang ditawarkan apa saja?.";
+                    break;
+                default:
+                    message = "Halo! Saya tertarik dengan jasa Anda.";
+            }
+            
+            const whatsappUrl = `${websiteContent.links.whatsappUrl}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        function openInstagram() {
+            window.open(websiteContent.links.instagramUrl, '_blank');
+        }
+
+        // Initialize the application
+        function init() {
+            loadWebsiteContent();
+            initializeDefaultSpecies();
+            filteredSpecies = [...speciesDatabase];
+            updateHomeStats();
+            renderFeaturedSpecies();
+            renderServicesContent();
+            renderProjectsContent();
+            renderConservationContent();
+            renderAboutContent();
+            setupDragAndDrop();
+        }
+
+        // Update home stats
+        function updateHomeStats() {
+            document.getElementById('homeSpeciesCount').textContent = speciesDatabase.length;
+            
+            const regions = new Set(speciesDatabase.map(s => s.region));
+            document.getElementById('homeRegionCount').textContent = regions.size;
+            
+            const endangeredCount = speciesDatabase.filter(s => 
+                ['Vulnerable', 'Endangered', 'Critically Endangered'].includes(s.conservationStatus)
+            ).length;
+            document.getElementById('homeEndangeredCount').textContent = endangeredCount;
+            
+            const endemicCount = speciesDatabase.filter(s => s.endemicStatus !== 'No').length;
+            document.getElementById('homeEndemicCount').textContent = endemicCount;
+        }
+
+        // Render featured species
+        function renderFeaturedSpecies() {
+            const featuredContainer = document.getElementById('featuredSpecies');
+            const featured = speciesDatabase.slice(0, 3);
+            
+            featuredContainer.innerHTML = '';
+            
+            featured.forEach(species => {
+                const card = document.createElement('div');
+                card.className = 'bg-gray-50 rounded-lg p-6 text-center hover:shadow-lg transition-all cursor-pointer';
+                card.onclick = () => {
+                    showSection('species');
+                    // Filter to show this species
+                    document.getElementById('speciesSearch').value = species.commonName;
+                    filterSpeciesDisplay();
+                };
+                
+                card.innerHTML = `
+                    <div class="text-6xl mb-4">${species.image || '🌱'}</div>
+                    <h4 class="text-lg font-bold text-gray-800 mb-2">${species.commonName}</h4>
+                    <p class="text-sm text-gray-600 italic mb-2">${species.scientificName}</p>
+                    <p class="text-xs text-blue-600 mb-3">${species.localName || ''}</p>
+                    <div class="flex justify-center gap-2 mb-3">
+                        <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                            ${species.category}
+                        </span>
+                        <span class="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                            ${species.region}
+                        </span>
+                    </div>
+                    <p class="text-xs text-gray-500">
+                        ${species.description ? species.description.substring(0, 80) + '...' : 'Click to learn more'}
+                    </p>
+                `;
+                
+                featuredContainer.appendChild(card);
+            });
+        }
+
+        // Update species filters
+        function updateSpeciesFilters() {
+            const categoryFilter = document.getElementById('speciesCategoryFilter');
+            const regionFilter = document.getElementById('speciesRegionFilter');
+            
+            // Clear existing options (except first)
+            categoryFilter.innerHTML = '<option value="">All Categories</option>';
+            regionFilter.innerHTML = '<option value="">All Regions</option>';
+            
+            // Get unique categories and regions
+            const categories = [...new Set(speciesDatabase.map(s => s.category))].sort();
+            const regions = [...new Set(speciesDatabase.map(s => s.region))].sort();
+            
+            categories.forEach(cat => {
+                if (cat) {
+                    const option = document.createElement('option');
+                    option.value = cat;
+                    option.textContent = cat;
+                    categoryFilter.appendChild(option);
+                }
+            });
+            
+            regions.forEach(reg => {
+                if (reg) {
+                    const option = document.createElement('option');
+                    option.value = reg;
+                    option.textContent = reg;
+                    regionFilter.appendChild(option);
+                }
+            });
+        }
+
+        // Filter species display
+        function filterSpeciesDisplay() {
+            const search = document.getElementById('speciesSearch').value.toLowerCase();
+            const category = document.getElementById('speciesCategoryFilter').value;
+            const region = document.getElementById('speciesRegionFilter').value;
+            
+            const filtered = speciesDatabase.filter(species => {
+                const matchesSearch = !search || 
+                    species.commonName.toLowerCase().includes(search) ||
+                    species.scientificName.toLowerCase().includes(search) ||
+                    (species.localName && species.localName.toLowerCase().includes(search));
+                
+                const matchesCategory = !category || species.category === category;
+                const matchesRegion = !region || species.region === region;
+                
+                return matchesSearch && matchesCategory && matchesRegion;
+            });
+            
+            renderSpeciesDisplay(filtered);
+        }
+
+        // Clear species filters
+        function clearSpeciesFilters() {
+            document.getElementById('speciesSearch').value = '';
+            document.getElementById('speciesCategoryFilter').value = '';
+            document.getElementById('speciesRegionFilter').value = '';
+            renderSpeciesDisplay(speciesDatabase);
+        }
+
+        // Render species display
+        function renderSpeciesDisplay(species) {
+            const grid = document.getElementById('speciesDisplayGrid');
+            
+            grid.innerHTML = '';
+            
+            species.forEach(spec => {
+                const card = document.createElement('div');
+                card.className = 'species-card bg-white rounded-lg shadow-md p-6 border border-gray-200 hover:shadow-lg transition-all';
+                
+                const statusColor = getStatusColor(spec.conservationStatus);
+                
+                card.innerHTML = `
+                    <div class="text-center mb-4">
+                        <div class="text-6xl mb-3">${spec.image || '🌱'}</div>
+                        <h3 class="font-bold text-xl text-gray-800 mb-1">${spec.commonName}</h3>
+                        <p class="text-sm text-gray-600 italic mb-1">${spec.scientificName}</p>
+                        <p class="text-xs text-blue-600">${spec.localName || ''}</p>
+                    </div>
+                    
+                    <div class="space-y-3 mb-4">
+                        <div class="flex justify-center gap-2">
+                            <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium">
+                                ${spec.category}
+                            </span>
+                            <span class="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
+                                ${spec.region}
+                            </span>
+                        </div>
+                        <div class="text-center">
+                            <span class="inline-block ${statusColor} text-xs px-2 py-1 rounded-full font-medium">
+                                ${spec.conservationStatus || 'Unknown'}
+                            </span>
+                            ${spec.endemicStatus !== 'No' ? '<span class="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full font-medium ml-2">🏝️ Endemic</span>' : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="text-sm text-gray-600 mb-4 text-center">
+                        <p><strong>Family:</strong> ${spec.family || 'Unknown'}</p>
+                        <p><strong>Height:</strong> ${spec.maxHeight || 'N/A'}m | <strong>Growth:</strong> ${spec.growthRate || 'N/A'}</p>
+                    </div>
+                    
+                    <div class="text-xs text-gray-500 mb-4 text-center">
+                        ${spec.description ? spec.description.substring(0, 100) + '...' : 'No description available'}
+                    </div>
+                    
+                    <div class="text-center">
+                        <button onclick="viewSpeciesDetails('${spec.id}')" 
+                                class="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded-lg font-medium transition-colors">
+                            View Details
+                        </button>
+                        ${isAdminLoggedIn ? `
+                        <div class="mt-3 pt-3 border-t border-gray-200">
+                            <div class="flex gap-2 justify-center">
+                                <button onclick="editSpecies('${spec.id}')" 
+                                        class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors"
+                                        title="Edit Species">
+                                    ✏️ Edit
+                                </button>
+                                <button onclick="deleteSpecies('${spec.id}')" 
+                                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors"
+                                        title="Delete Species">
+                                    🗑️ Delete
+                                </button>
+                                <button onclick="duplicateSpecies('${spec.id}')" 
+                                        class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded text-sm transition-colors"
+                                        title="Duplicate Species">
+                                    📋 Copy
+                                </button>
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Update conservation stats
+        function updateConservationStats() {
+            const statsContainer = document.getElementById('conservationStats');
+            
+            const statusCounts = {
+                'Least Concern': 0,
+                'Near Threatened': 0,
+                'Vulnerable': 0,
+                'Endangered': 0,
+                'Critically Endangered': 0,
+                'Data Deficient': 0
+            };
+            
+            speciesDatabase.forEach(species => {
+                if (species.conservationStatus && statusCounts.hasOwnProperty(species.conservationStatus)) {
+                    statusCounts[species.conservationStatus]++;
+                }
+            });
+            
+            statsContainer.innerHTML = '';
+            
+            Object.entries(statusCounts).forEach(([status, count]) => {
+                const color = getStatusColor(status);
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center p-3 border border-gray-200 rounded-lg';
+                div.innerHTML = `
+                    <span class="font-medium">${status}</span>
+                    <span class="inline-block ${color} px-3 py-1 rounded-full font-bold">${count}</span>
+                `;
+                statsContainer.appendChild(div);
+            });
+        }
+
+        // Render priority species
+        function renderPrioritySpecies() {
+            const container = document.getElementById('prioritySpecies');
+            const priority = speciesDatabase.filter(s => 
+                ['Vulnerable', 'Endangered', 'Critically Endangered'].includes(s.conservationStatus)
+            ).slice(0, 5);
+            
+            container.innerHTML = '';
+            
+            if (priority.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center">No priority species identified</p>';
+                return;
+            }
+            
+            priority.forEach(species => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors';
+                div.innerHTML = `
+                    <div class="text-2xl mr-3">${species.image || '🌱'}</div>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-gray-800">${species.commonName}</h4>
+                        <p class="text-xs text-gray-600 italic">${species.scientificName}</p>
+                        <span class="inline-block ${getStatusColor(species.conservationStatus)} text-xs px-2 py-1 rounded-full font-medium mt-1">
+                            ${species.conservationStatus}
+                        </span>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('totalSpecies').textContent = speciesDatabase.length;
+            
+            const categories = new Set(speciesDatabase.map(s => s.category));
+            document.getElementById('totalCategories').textContent = categories.size;
+            
+            const regions = new Set(speciesDatabase.map(s => s.region));
+            document.getElementById('totalRegions').textContent = regions.size;
+            
+            const endemicCount = speciesDatabase.filter(s => s.endemicStatus !== 'No').length;
+            document.getElementById('endemicCount').textContent = endemicCount;
+        }
+
+        // Update filter dropdowns
+        function updateFilters() {
+            const categoryFilter = document.getElementById('categoryFilter');
+            const regionFilter = document.getElementById('regionFilter');
+            
+            // Clear existing options (except first)
+            categoryFilter.innerHTML = '<option value="">All Categories</option>';
+            regionFilter.innerHTML = '<option value="">All Regions</option>';
+            
+            // Get unique categories and regions
+            const categories = [...new Set(speciesDatabase.map(s => s.category))].sort();
+            const regions = [...new Set(speciesDatabase.map(s => s.region))].sort();
+            
+            categories.forEach(cat => {
+                if (cat) {
+                    const option = document.createElement('option');
+                    option.value = cat;
+                    option.textContent = cat;
+                    categoryFilter.appendChild(option);
+                }
+            });
+            
+            regions.forEach(reg => {
+                if (reg) {
+                    const option = document.createElement('option');
+                    option.value = reg;
+                    option.textContent = reg;
+                    regionFilter.appendChild(option);
+                }
+            });
+        }
+
+        // Filter species
+        function filterSpecies() {
+            const search = document.getElementById('searchSpecies').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const region = document.getElementById('regionFilter').value;
+            
+            filteredSpecies = speciesDatabase.filter(species => {
+                const matchesSearch = !search || 
+                    species.commonName.toLowerCase().includes(search) ||
+                    species.scientificName.toLowerCase().includes(search) ||
+                    (species.localName && species.localName.toLowerCase().includes(search)) ||
+                    (species.family && species.family.toLowerCase().includes(search));
+                
+                const matchesCategory = !category || species.category === category;
+                const matchesRegion = !region || species.region === region;
+                
+                return matchesSearch && matchesCategory && matchesRegion;
+            });
+            
+            renderSpeciesGrid();
+        }
+
+        // Clear filters
+        function clearFilters() {
+            document.getElementById('searchSpecies').value = '';
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('regionFilter').value = '';
+            filteredSpecies = [...speciesDatabase];
+            renderSpeciesGrid();
+        }
+
+        // Render species grid
+        function renderSpeciesGrid() {
+            const grid = document.getElementById('speciesGrid');
+            document.getElementById('displayedCount').textContent = filteredSpecies.length;
+            
+            grid.innerHTML = '';
+            
+            filteredSpecies.forEach(species => {
+                const card = document.createElement('div');
+                card.className = 'species-card bg-white rounded-lg shadow-md p-6 border border-gray-200 hover:shadow-lg transition-all';
+                
+                const statusColor = getStatusColor(species.conservationStatus);
+                
+                card.innerHTML = `
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center">
+                            <div class="text-4xl mr-4">${species.image || '🌱'}</div>
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-800">${species.commonName}</h3>
+                                <p class="text-sm text-gray-600 italic">${species.scientificName}</p>
+                                <p class="text-xs text-blue-600">${species.localName || ''}</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="editSpecies('${species.id}')" 
+                                    class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors"
+                                    title="Edit Species">
+                                ✏️
+                            </button>
+                            <button onclick="deleteSpecies('${species.id}')" 
+                                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors"
+                                    title="Delete Species">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-2 mb-4">
+                        <div class="flex gap-2">
+                            <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium">
+                                ${species.category}
+                            </span>
+                            <span class="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
+                                ${species.region}
+                            </span>
+                            ${species.endemicStatus !== 'No' ? '<span class="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full font-medium">🏝️ Endemic</span>' : ''}
+                        </div>
+                        <div>
+                            <span class="inline-block ${statusColor} text-xs px-2 py-1 rounded-full font-medium">
+                                ${species.conservationStatus || 'Unknown'}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="text-sm text-gray-600 mb-4">
+                        <p><strong>Family:</strong> ${species.family || 'Unknown'}</p>
+                        <p><strong>Height:</strong> ${species.maxHeight || 'N/A'}m | <strong>Growth:</strong> ${species.growthRate || 'N/A'}</p>
+                        <p><strong>Uses:</strong> ${species.uses ? species.uses.slice(0, 3).join(', ') : 'Various'}${species.uses && species.uses.length > 3 ? '...' : ''}</p>
+                    </div>
+                    
+                    <div class="text-xs text-gray-500 mb-4">
+                        ${species.description ? species.description.substring(0, 120) + '...' : 'No description available'}
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        <button onclick="duplicateSpecies('${species.id}')" 
+                                class="flex-1 bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+                            📋 Duplicate
+                        </button>
+                        <button onclick="viewSpeciesDetails('${species.id}')" 
+                                class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors"
+                                title="View Details">
+                            👁️
+                        </button>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Get status color
+        function getStatusColor(status) {
+            switch(status) {
+                case 'Least Concern': return 'bg-green-100 text-green-800';
+                case 'Near Threatened': return 'bg-yellow-100 text-yellow-800';
+                case 'Vulnerable': return 'bg-orange-100 text-orange-800';
+                case 'Endangered': return 'bg-red-100 text-red-800';
+                case 'Critically Endangered': return 'bg-red-200 text-red-900';
+                default: return 'bg-gray-100 text-gray-800';
+            }
+        }
+
+        // Add new species
+        function addNewSpecies() {
+            if (!checkAdminLogin()) return;
+            
+            editingSpeciesId = null;
+            document.getElementById('modalTitle').textContent = 'Add New Species';
+            document.getElementById('speciesForm').reset();
+            document.getElementById('speciesId').value = '';
+            document.getElementById('endemicStatus').value = 'No';
+            resetImageUpload();
+            document.getElementById('speciesModal').classList.remove('hidden');
+        }
+
+        // Edit species
+        function editSpecies(speciesId) {
+            if (!checkAdminLogin()) return;
+            
+            const species = speciesDatabase.find(s => s.id === speciesId);
+            if (!species) return;
+            
+            editingSpeciesId = speciesId;
+            document.getElementById('modalTitle').textContent = 'Edit Species';
+            
+            // Populate form fields
+            document.getElementById('speciesId').value = species.id;
+            document.getElementById('scientificName').value = species.scientificName || '';
+            document.getElementById('commonName').value = species.commonName || '';
+            document.getElementById('localName').value = species.localName || '';
+            document.getElementById('family').value = species.family || '';
+            document.getElementById('category').value = species.category || '';
+            document.getElementById('region').value = species.region || '';
+            document.getElementById('maxHeight').value = species.maxHeight || '';
+            document.getElementById('maxDiameter').value = species.maxDiameter || '';
+            document.getElementById('growthRate').value = species.growthRate || '';
+            document.getElementById('soilType').value = species.soilType || '';
+            document.getElementById('waterReq').value = species.waterReq || '';
+            document.getElementById('lightReq').value = species.lightReq || '';
+            document.getElementById('conservationStatus').value = species.conservationStatus || '';
+            document.getElementById('endemicStatus').value = species.endemicStatus || 'No';
+            document.getElementById('description').value = species.description || '';
+            
+            // Handle image
+            if (species.image) {
+                if (species.image.startsWith('data:')) {
+                    // It's an uploaded image
+                    document.getElementById('previewImg').src = species.image;
+                    document.getElementById('imagePreview').classList.remove('hidden');
+                    document.getElementById('uploadPlaceholder').classList.add('hidden');
+                    document.getElementById('emojiInput').value = '';
+                    document.getElementById('emojiPreview').textContent = '🌱';
+                } else {
+                    // It's an emoji
+                    document.getElementById('emojiInput').value = species.image;
+                    document.getElementById('emojiPreview').textContent = species.image;
+                    resetImageUpload();
+                }
+            } else {
+                resetImageUpload();
+            }
+            
+            // Set checkboxes for uses
+            const uses = species.uses || [];
+            document.getElementById('useTimber').checked = uses.includes('Timber');
+            document.getElementById('useFruit').checked = uses.includes('Fruit');
+            document.getElementById('useMedicine').checked = uses.includes('Medicine');
+            document.getElementById('useWildlifeFood').checked = uses.includes('Wildlife Food');
+            document.getElementById('useOrnamental').checked = uses.includes('Ornamental');
+            document.getElementById('useErosionControl').checked = uses.includes('Erosion Control');
+            document.getElementById('useShade').checked = uses.includes('Shade');
+            document.getElementById('useWindbreak').checked = uses.includes('Windbreak');
+            document.getElementById('useCarbon').checked = uses.includes('Carbon Storage');
+            
+            document.getElementById('speciesModal').classList.remove('hidden');
+        }
+
+        // Delete species
+        function deleteSpecies(speciesId) {
+            if (!checkAdminLogin()) return;
+            
+            if (confirm('Are you sure you want to delete this species? This action cannot be undone.')) {
+                speciesDatabase = speciesDatabase.filter(s => s.id !== speciesId);
+                saveDatabase();
+                updateAllStats();
+                updateFilters();
+                filterSpecies();
+            }
+        }
+
+        // Duplicate species
+        function duplicateSpecies(speciesId) {
+            if (!checkAdminLogin()) return;
+            
+            const species = speciesDatabase.find(s => s.id === speciesId);
+            if (!species) return;
+            
+            const duplicate = { ...species };
+            duplicate.id = 'species-' + Date.now();
+            duplicate.commonName = duplicate.commonName + ' (Copy)';
+            duplicate.scientificName = duplicate.scientificName + ' copy';
+            
+            speciesDatabase.push(duplicate);
+            saveDatabase();
+            updateAllStats();
+            updateFilters();
+            filterSpecies();
+        }
+
+        // View species details
+        function viewSpeciesDetails(speciesId) {
+            const species = speciesDatabase.find(s => s.id === speciesId);
+            if (!species) return;
+            
+            const details = `
+🌿 ${species.commonName} (${species.scientificName})
+
+📍 Local Name: ${species.localName || 'N/A'}
+🏷️ Family: ${species.family || 'N/A'}
+📂 Category: ${species.category}
+🌍 Region: ${species.region}
+
+📏 Max Height: ${species.maxHeight || 'N/A'}m
+📐 Max Diameter: ${species.maxDiameter || 'N/A'}cm
+⚡ Growth Rate: ${species.growthRate || 'N/A'}
+
+🔧 Uses: ${species.uses ? species.uses.join(', ') : 'N/A'}
+🌱 Soil Type: ${species.soilType || 'Any'}
+💧 Water Needs: ${species.waterReq || 'N/A'}
+☀️ Light Needs: ${species.lightReq || 'N/A'}
+
+⚠️ Conservation Status: ${species.conservationStatus || 'Unknown'}
+🏝️ Endemic Status: ${species.endemicStatus || 'No'}
+
+📝 Description: ${species.description || 'No description available'}
+            `;
+            
+            alert(details);
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('speciesModal').classList.add('hidden');
+            editingSpeciesId = null;
+        }
+
+        // Handle image upload
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Check file size (limit to 2MB)
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('Image size should be less than 2MB');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageData = e.target.result;
+                    document.getElementById('previewImg').src = imageData;
+                    document.getElementById('imagePreview').classList.remove('hidden');
+                    document.getElementById('uploadPlaceholder').classList.add('hidden');
+                    
+                    // Clear emoji input when image is uploaded
+                    document.getElementById('emojiInput').value = '';
+                    document.getElementById('emojiPreview').textContent = '🌱';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Update emoji preview
+        function updateEmojiPreview() {
+            const emoji = document.getElementById('emojiInput').value;
+            document.getElementById('emojiPreview').textContent = emoji || '🌱';
+            
+            // Clear image upload when emoji is entered
+            if (emoji) {
+                resetImageUpload();
+            }
+        }
+
+        // Reset image upload
+        function resetImageUpload() {
+            document.getElementById('imagePreview').classList.add('hidden');
+            document.getElementById('uploadPlaceholder').classList.remove('hidden');
+            document.getElementById('imageUpload').value = '';
+        }
+
+        // Setup drag and drop
+        function setupDragAndDrop() {
+            const uploadArea = document.getElementById('imageUploadArea');
+            
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    const file = files[0];
+                    if (file.type.startsWith('image/')) {
+                        document.getElementById('imageUpload').files = files;
+                        handleImageUpload({ target: { files: files } });
+                    } else {
+                        alert('Please drop an image file');
+                    }
+                }
+            });
+        }
+
+        // Update all stats
+        function updateAllStats() {
+            updateHomeStats();
+            updateStats();
+            if (document.getElementById('conservation').classList.contains('active')) {
+                updateConservationStats();
+                renderPrioritySpecies();
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('speciesForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = {
+                scientificName: document.getElementById('scientificName').value,
+                commonName: document.getElementById('commonName').value,
+                localName: document.getElementById('localName').value,
+                family: document.getElementById('family').value,
+                category: document.getElementById('category').value,
+                region: document.getElementById('region').value,
+                maxHeight: parseFloat(document.getElementById('maxHeight').value) || null,
+                maxDiameter: parseFloat(document.getElementById('maxDiameter').value) || null,
+                growthRate: document.getElementById('growthRate').value,
+                soilType: document.getElementById('soilType').value,
+                waterReq: document.getElementById('waterReq').value,
+                lightReq: document.getElementById('lightReq').value,
+                conservationStatus: document.getElementById('conservationStatus').value,
+                endemicStatus: document.getElementById('endemicStatus').value,
+                description: document.getElementById('description').value,
+                uses: []
+            };
+            
+            // Determine image (uploaded image takes priority over emoji)
+            const uploadedImage = document.getElementById('previewImg').src;
+            const emojiImage = document.getElementById('emojiInput').value;
+            
+            if (uploadedImage && !uploadedImage.includes('data:,')) {
+                formData.image = uploadedImage;
+            } else if (emojiImage) {
+                formData.image = emojiImage;
+            } else {
+                formData.image = '🌱'; // Default emoji
+            }
+            
+            // Collect uses
+            if (document.getElementById('useTimber').checked) formData.uses.push('Timber');
+            if (document.getElementById('useFruit').checked) formData.uses.push('Fruit');
+            if (document.getElementById('useMedicine').checked) formData.uses.push('Medicine');
+            if (document.getElementById('useWildlifeFood').checked) formData.uses.push('Wildlife Food');
+            if (document.getElementById('useOrnamental').checked) formData.uses.push('Ornamental');
+            if (document.getElementById('useErosionControl').checked) formData.uses.push('Erosion Control');
+            if (document.getElementById('useShade').checked) formData.uses.push('Shade');
+            if (document.getElementById('useWindbreak').checked) formData.uses.push('Windbreak');
+            if (document.getElementById('useCarbon').checked) formData.uses.push('Carbon Storage');
+            
+            if (editingSpeciesId) {
+                // Update existing species
+                const index = speciesDatabase.findIndex(s => s.id === editingSpeciesId);
+                if (index >= 0) {
+                    formData.id = editingSpeciesId;
+                    speciesDatabase[index] = formData;
+                }
+            } else {
+                // Add new species
+                formData.id = 'species-' + Date.now();
+                speciesDatabase.push(formData);
+            }
+            
+            saveDatabase();
+            updateAllStats();
+            updateFilters();
+            updateSpeciesFilters();
+            filterSpecies();
+            closeModal();
+            
+            alert(editingSpeciesId ? 'Species updated successfully!' : 'Species added successfully!');
+        });
+
+        // Export database
+        function exportDatabase() {
+            if (!checkAdminLogin()) return;
+            
+            const dataStr = JSON.stringify(speciesDatabase, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `indonesian-species-database-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Import database
+        function importDatabase() {
+            if (!checkAdminLogin()) return;
+            
+            document.getElementById('importFile').click();
+        }
+
+        // Handle import
+        function handleImport(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        if (Array.isArray(importedData)) {
+                            if (confirm('This will replace your current database. Are you sure?')) {
+                                speciesDatabase = importedData;
+                                saveDatabase();
+                                updateAllStats();
+                                updateFilters();
+                                updateSpeciesFilters();
+                                filterSpecies();
+                                alert('Database imported successfully!');
+                            }
+                        } else {
+                            alert('Invalid file format. Please select a valid JSON file.');
+                        }
+                    } catch (error) {
+                        alert('Error reading file. Please check the file format.');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        // Initialize the application when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            init();
+            
+            // Add admin login form handler
+            document.getElementById('adminLoginForm').addEventListener('submit', handleAdminLogin);
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96ecd681f734f0b0',t:'MTc1NTEzNjYwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
